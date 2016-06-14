@@ -45,7 +45,7 @@ Guido.Request = (function ($, _) {
 
     home: function() {
       if(!_.isString(Guido.Request.HOME)) {
-        HOME = BASE_PATH + '?form=tpl/monitor.html' + Guido.Request.getSessionString();
+        HOME = BASE_PATH + Guido.Request.getSessionString();
       }
       return HOME;
     },
@@ -363,7 +363,7 @@ Guido.Request = (function ($, _) {
      */
     buildParams: function(func, data) {
       var out = _.extend({}, defaults);
-      out.url = BASE_PATH + '?func=' + func;
+      out.url = BASE_PATH + func;
       out.data = JSON.stringify(Guido.Request.buildData(data));
       return out;
     },

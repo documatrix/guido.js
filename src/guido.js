@@ -55,7 +55,6 @@ var app = (function ($) {
       }
 
       return new Handlebars.SafeString(Handlebars.compile(tr)(interpolation));
-      //return _.template(tr)(interpolation);
     },
 
     _navigation: {},
@@ -65,9 +64,9 @@ var app = (function ($) {
      * Start the Guido Application
      */
     start: function () {
-      return Guido.Request.load('get_user_settings', {
-        elem_id: "Navigation"
-      }, Guido.bootstrap);
+      // return Guido.Request.load('get_user_settings', {
+      //   elem_id: "Navigation"
+      // }, Guido.bootstrap);
     },
 
     /**
@@ -76,13 +75,13 @@ var app = (function ($) {
      * @param {object} response the response object of the get_user_settings request.
      */
     bootstrap: function(response) {
-      Guido.navigation = response.navigation;
-      if( response.settings ) {
-        Guido.settings = response.settings;
-        Guido.menuCollapsed = ( String(response.settings.collapsed) === 'true' );
-      } else {
-        Guido.menuCollapsed = false;
-      }
+      // Guido.navigation = response.navigation;
+      // if( response.settings ) {
+      //   Guido.settings = response.settings;
+      //   Guido.menuCollapsed = ( String(response.settings.collapsed) === 'true' );
+      // } else {
+      //   Guido.menuCollapsed = false;
+      // }
 
       Guido.setup();
     },

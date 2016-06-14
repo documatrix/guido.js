@@ -161,6 +161,7 @@ Guido.View = (function ($, _) {
      * @returns {void}
      */
     compile: function($templates) {
+
       if(!($templates instanceof $) || $templates.size() == 0) { return; }
 
       var templatesArray = $templates;

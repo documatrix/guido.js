@@ -106,7 +106,7 @@
         },
         load: function(options, callback) {
             var params = $.extend({}, options);
-            params.url = GuidoObj.base_url + '?func=' + params.func;
+            params.url = GuidoObj.base_url + params.func;
             return GuidoObj.ajax(params, callback);
         },
         /*
