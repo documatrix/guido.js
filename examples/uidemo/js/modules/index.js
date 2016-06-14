@@ -29,10 +29,9 @@ window.Guido.Index = (function ($, _) {
     // Actions
     index: function() {
       this._index();
-      console.log('index');
       alert('index')
     }
-    
+
   };
 
   return module;

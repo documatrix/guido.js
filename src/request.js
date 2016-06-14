@@ -56,66 +56,6 @@ Guido.Request = (function ($, _) {
       return HOME;
     },
 
-    // *
-    //  * Return the session query parameter
-    //  * @param {string} session optional session
-    //  * @returns {string} the session query parameter
-     
-    // getSessionString: function(session) {
-    //   session = session || Guido.Request.getSession();
-    //   return "&session_id=" + session;
-    // },
-
-    // *
-    //  * Return the current session
-    //  * @returns {string} the current session.
-     
-    // getSession: function() {
-    //   return Guido.sessionId || null;
-    // },
-
-    // /**
-    //  * Set the session. Several values are set atm because of compatibility.
-    //  * Current code uses Guido.Request.getSession() or Guido.sessionId
-    //  * @param {string} session the session string to be set.
-    //  */
-    // setSession: function(session) {
-    //   Guido.sessionID = session;
-    //   Guido.sessionId = session;
-    //   Guido.SESSION = session;
-
-    //   Guido.Request.defaults.session_id = session;
-    //   Guido.Request.defaults.data.session_id = session;
-
-    // },
-
-    // /**
-    //  * Destroy current session.
-    //  */
-    // destroySession: function() {
-    //   HOME = null;
-    //   Guido.setSession(null);
-    // },
-
-    /**
-     * Build a url path + query string from the passed options.
-     * @param {object} data key/value pairs for the resulting query string
-     * @param {string} base_url optional base path
-     * @returns {string} the constructed url path + query string
-     */
-    // buildGetParams: function (data, path) {
-    //   var url   = path || BASE_PATH,
-    //       parts = [];
-
-    //   _.each(data, function(value, key) {
-    //     if(key !== 'data') {
-    //       parts.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
-    //     }
-    //   });
-
-    //   return url + '?' + parts.join('&');
-    // },
-
     /**
      * Extract the value of a url parameter from the passed url.
      * If url is omitted, window.location.search is used instead.
@@ -167,39 +107,6 @@ Guido.Request = (function ($, _) {
       }
       return false;
     },
-
-    // formUrl: function(tpl, options) {
-    //   var params = _.extend({
-    //     form: tpl,
-    //     session_id: Guido.Request.getSession()
-    //   }, options);
-    //   return this.buildGetParams(params);
-    // },
-
-    // funcUrl: function(func, options) {
-    //   var params = _.extend({
-    //     func: func,
-    //     session_id: Guido.Request.getSession()
-    //   }, options);
-    //   return this.buildGetParams(params);
-    // },
-
-    // *
-    //  * Wrapper function around $.pjax
-    //  * @param {string} url the be called.
-    //  * @param {string} target jQuery selector. The response data will replace the element with the passed selector.
-    //  * @returns {xhr} returns the jQuery xhr object.
-     
-    // pjax: function(url, target) {
-    //   var container = target || '#pjax';
-
-    //   var xhr = $.pjax({
-    //     url: url,
-    //     container: container
-    //   });
-
-    //   return xhr;
-    // },
 
     /**
      * Fire a func request to the server.
@@ -368,14 +275,6 @@ Guido.Request = (function ($, _) {
       return out;
     },
 
-//    buildGetParams: function(func, data) {
-//      var out = _.extend({}, defaults);
-//      out.url = BASE_PATH + '?func=' + func;
-//      // TODO: server wants json data in url params!
-//      // this makes reading stuff from url complex
-//      out.data = JSON.stringify(data);
-//      return out;
-//    },
 
     buildPostParams: function(func, data) {
       var params = this.buildParams(func, data);
@@ -402,84 +301,6 @@ Guido.Request = (function ($, _) {
       out.session_id = Guido.Request.getSession();
       return out;
     },
-
-    /**
-     * UNUSED:
-     * Error callback for $.ajax calls
-     * @param {xhr} jqXHR the xhr object of the call
-     * @param {string} exception name of the exception
-     * @returns {boolean} false
-     */
-//    error: function (jqXHR, exception) {
-//      var res = {
-//        response_status: jqXHR.status,
-//      };
-//      if (jqXHR.status === 0) {
-//        console.error('Not connected. Verify Network.');
-//      } else if (jqXHR.status === 404) {
-//        res.response_message = 'Requested page not found [404]';
-//      } else if (jqXHR.status === 500) {
-//        console.log("internal server error");
-//        res.response_message = 'Internal server error [500]';
-//      } else if (exception === 'parsererror') {
-//        res.response_message = 'Requested JSON parse failed.';
-//      } else if (exception === 'timeout') {
-//        res.response_message = 'Time out error.';
-//      } else if (exception === 'abort') {
-//        res.response_message = 'Ajax request aborted.';
-//      } else {
-//        res.response_message = 'Uncaught Error.n' + jqXHR.responseText;
-//      }
-//
-//      // TODO: this?
-//      Guido.Request.sendError(res);
-//      return false;
-//    },
-
-    /**
-     * UNUSED:
-     * Send a error to the server.
-     * @param {object} errorData the error information
-     * @param {function} callback is called when error request is done.
-     * @returns {object} the error promise.
-     */
-//    sendError: function (errorData, callback) {
-//
-//      try {
-//        errorData = {
-//          response_status: errorData.response_status || 500,
-//          response_message: errorData.response_message || "Internal Server error...",
-//          request: errorData.request || "unknown request"
-//        };
-//      } catch (err) {
-//        if (Helpers.debugMode) {
-//          debugger;
-//          throw err;
-//        } else {
-//          errorData = {
-//            response_status: 500,
-//            response_message: "Wrong parameter passed for logging to the server",
-//            response_data: errorData
-//          };
-//        }
-//      }
-//
-//      var options = {
-//        data: {
-//          'func': 'error',
-//          'SESSID': '',
-//          'data_type': 'json',
-//          'data': errorData
-//        }
-//      };
-//      options = $.extend({}, defaults, options);
-//
-//      if (typeof callback !== "undefined") {
-//        return $.ajax(options).done(callback);
-//      } else {
-//        return $.ajax(options);
-//      }
-//    }
   };
 
   _.assign(module, {

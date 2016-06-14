@@ -128,11 +128,9 @@ Guido.Event = (function ($, _) {
         }
 
         // NOTE: last state is saved in Guido.View.instance
-        // if( Guido.View.currentView ) {
-        //   Guido.View.currentView.saveLastState();
-        // }
-
-        console.log('iamhere module: ', module)
+        if( Guido.View.currentView ) {
+          Guido.View.currentView.saveLastState();
+        }
 
         Guido.View.instance( module ).load();
       }

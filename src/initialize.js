@@ -15,7 +15,7 @@
      * The .done function is called, as soon as all async operations
      * ( which are passed as an array) are finished )
      */
-    $("#Content").append(Guido.templateContent);
+    $("#container").append(Guido.templateContent);
         bodyElem.trigger("contentComplete");
   });
 
