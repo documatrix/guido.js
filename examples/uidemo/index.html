@@ -2,39 +2,40 @@
 <html>
 <head>
 	<title>Guido.js GUI demo</title>
+	<base href="/examples/uidemo">
 </head>
 <body>
 
-	<div>
-		hello world
+	<div id="content">
+		Loading ... 
 	</div>
 
-	<script type="text/javascript" src="../vendor/jquery.min.js"></script>
-	<script type="text/javascript" src="../vendor/handlebars.min.js"></script>
-	<script type="text/javascript" src="../vendor/lodash.min.js"></script>
+	<script type="text/javascript" src="vendor/jquery.min.js"></script>
+	<script type="text/javascript" src="vendor/handlebars.min.js"></script>
+	<script type="text/javascript" src="vendor/lodash.min.js"></script>
 
-	<script type="text/javascript" src="../../src/guido.js"></script>
-	<script type="text/javascript" src="../../src/request.js"></script>
-	<script type="text/javascript" src="../../src/view.js"></script>
-	<script type="text/javascript" src="../../src/events.js"></script>
-	<script type="text/javascript" src="../../src/initialize.js"></script>
-	<script type="text/javascript" src="../../src/base/actions.js"></script>
-	<script type="text/javascript" src="../../src/base/record.js"></script>
-	<script type="text/javascript" src="../../src/base/render.js"></script>
-	<script type="text/javascript" src="../../src/base/state.js"></script>
-	<script type="text/javascript" src="../../src/modules/base_view.js"></script>
-	<script type="text/javascript" src="../../src/helpers/notification.js"></script>
-	<script type="text/javascript" src="../../src/helpers/general.js"></script>
+	<script type="text/javascript" src="../src/guido.js"></script>
+	<script type="text/javascript" src="../src/request.js"></script>
+	<script type="text/javascript" src="../src/view.js"></script>
+	<script type="text/javascript" src="../src/events.js"></script>
+	<script type="text/javascript" src="../src/initialize.js"></script>
+	<script type="text/javascript" src="../src/base/actions.js"></script>
+	<script type="text/javascript" src="../src/base/record.js"></script>
+	<script type="text/javascript" src="../src/base/render.js"></script>
+	<script type="text/javascript" src="../src/base/state.js"></script>
+	<script type="text/javascript" src="../src/modules/base_view.js"></script>
+	<script type="text/javascript" src="../src/helpers/notification.js"></script>
+	<script type="text/javascript" src="../src/helpers/general.js"></script>
 
-	<script type="text/javascript" src="../js/modules/home.js"></script>
 
 	<script type="text/javascript">
-		$(document).ready(function() {
-			Guido.BASE_PATH = window.location.href;
-			Guido.MODULE_PATH = window.location.href + "/js/modules";
-			Guido.TEMPLATE_PATH = window.location.href + "/tpl";
+		Guido.BASE_PATH = "http://localhost:9999/examples/uidemo";
+		Guido.MODULE_PATH = "http://localhost:9999/examples/uidemo/js/modules";
+		Guido.TEMPLATE_PATH = "http://localhost:9999/examples/uidemo/js/tpl";
 
-			Guido.start().done(function() {
+		$(document).ready(function() {
+			Guido.start(function() {
+				Guido.Request.updatePaths();
 				Guido.View.instanceFromUrl().load();
 			})
 		})

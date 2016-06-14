@@ -39,6 +39,12 @@ Guido.Request = (function ($, _) {
 
   var module = {
 
+    updatePaths: function() {
+      BASE_PATH = Guido.BASE_PATH;
+      MODULE_PATH = Guido.MODULE_PATH;
+      TEMPLATE_PATH = Guido.TEMPLATE_PATH;
+    },
+
     base: function() {
       return BASE_PATH;
     },
@@ -50,46 +56,46 @@ Guido.Request = (function ($, _) {
       return HOME;
     },
 
-    /**
-     * Return the session query parameter
-     * @param {string} session optional session
-     * @returns {string} the session query parameter
-     */
-    getSessionString: function(session) {
-      session = session || Guido.Request.getSession();
-      return "&session_id=" + session;
-    },
+    // *
+    //  * Return the session query parameter
+    //  * @param {string} session optional session
+    //  * @returns {string} the session query parameter
+     
+    // getSessionString: function(session) {
+    //   session = session || Guido.Request.getSession();
+    //   return "&session_id=" + session;
+    // },
 
-    /**
-     * Return the current session
-     * @returns {string} the current session.
-     */
-    getSession: function() {
-      return Guido.sessionId || null;
-    },
+    // *
+    //  * Return the current session
+    //  * @returns {string} the current session.
+     
+    // getSession: function() {
+    //   return Guido.sessionId || null;
+    // },
 
-    /**
-     * Set the session. Several values are set atm because of compatibility.
-     * Current code uses Guido.Request.getSession() or Guido.sessionId
-     * @param {string} session the session string to be set.
-     */
-    setSession: function(session) {
-      Guido.sessionID = session;
-      Guido.sessionId = session;
-      Guido.SESSION = session;
+    // /**
+    //  * Set the session. Several values are set atm because of compatibility.
+    //  * Current code uses Guido.Request.getSession() or Guido.sessionId
+    //  * @param {string} session the session string to be set.
+    //  */
+    // setSession: function(session) {
+    //   Guido.sessionID = session;
+    //   Guido.sessionId = session;
+    //   Guido.SESSION = session;
 
-      Guido.Request.defaults.session_id = session;
-      Guido.Request.defaults.data.session_id = session;
+    //   Guido.Request.defaults.session_id = session;
+    //   Guido.Request.defaults.data.session_id = session;
 
-    },
+    // },
 
-    /**
-     * Destroy current session.
-     */
-    destroySession: function() {
-      HOME = null;
-      Guido.setSession(null);
-    },
+    // /**
+    //  * Destroy current session.
+    //  */
+    // destroySession: function() {
+    //   HOME = null;
+    //   Guido.setSession(null);
+    // },
 
     /**
      * Build a url path + query string from the passed options.
@@ -97,18 +103,18 @@ Guido.Request = (function ($, _) {
      * @param {string} base_url optional base path
      * @returns {string} the constructed url path + query string
      */
-    buildGetParams: function (data, path) {
-      var url   = path || BASE_PATH,
-          parts = [];
+    // buildGetParams: function (data, path) {
+    //   var url   = path || BASE_PATH,
+    //       parts = [];
 
-      _.each(data, function(value, key) {
-        if(key !== 'data') {
-          parts.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
-        }
-      });
+    //   _.each(data, function(value, key) {
+    //     if(key !== 'data') {
+    //       parts.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
+    //     }
+    //   });
 
-      return url + '?' + parts.join('&');
-    },
+    //   return url + '?' + parts.join('&');
+    // },
 
     /**
      * Extract the value of a url parameter from the passed url.
@@ -117,33 +123,29 @@ Guido.Request = (function ($, _) {
      * @param {string} url the url to be searched
      * @returns {string} the decoded value of the searched parameter or undefined if not found.
      */
-    getURLParameter: function (param, url) {
-      var url = url || window.location.search, //.substring(1),
-          query = url.match(/\?(.+)/),
-          query_string = {};
+    getURLParameter: function (url) {
 
-      if(_.isArray(query) && query.length == 2) {
-        query = query[1];
-      } else {
-        return;
+      var params;
+
+      if( ! url ) return false;
+
+      params = url.replace(document.querySelector('base').href, '').replace('#', '');
+
+      if( params[0] == '/' ) {
+        params = params.substr(1);
       }
 
-      var vars = query.split("&");
-      var arr;
-
-      for (var i = 0; i < vars.length; i++) {
-        var pair = vars[i].split("=");
-        if (typeof query_string[pair[0]] === "undefined") {
-          query_string[pair[0]] = decodeURIComponent(pair[1]);
-        } else if (typeof query_string[pair[0]] === "string") {
-          arr = [query_string[pair[0]], decodeURIComponent(pair[1])];
-          query_string[pair[0]] = arr;
-        } else {
-          query_string[pair[0]].push(decodeURIComponent(pair[1]));
-        }
+      if( params.indexOf('index.html') >= 0 ) {
+        return params;
       }
+      
+      params = params.split('/');
 
-      return param ? query_string[param] : query_string;
+      return {
+        name: params.shift(),
+        state: params.shift() || 'index',
+        params: params
+      }
     },
 
     /**
@@ -166,38 +168,38 @@ Guido.Request = (function ($, _) {
       return false;
     },
 
-    formUrl: function(tpl, options) {
-      var params = _.extend({
-        form: tpl,
-        session_id: Guido.Request.getSession()
-      }, options);
-      return this.buildGetParams(params);
-    },
+    // formUrl: function(tpl, options) {
+    //   var params = _.extend({
+    //     form: tpl,
+    //     session_id: Guido.Request.getSession()
+    //   }, options);
+    //   return this.buildGetParams(params);
+    // },
 
-    funcUrl: function(func, options) {
-      var params = _.extend({
-        func: func,
-        session_id: Guido.Request.getSession()
-      }, options);
-      return this.buildGetParams(params);
-    },
+    // funcUrl: function(func, options) {
+    //   var params = _.extend({
+    //     func: func,
+    //     session_id: Guido.Request.getSession()
+    //   }, options);
+    //   return this.buildGetParams(params);
+    // },
 
-    /**
-     * Wrapper function around $.pjax
-     * @param {string} url the be called.
-     * @param {string} target jQuery selector. The response data will replace the element with the passed selector.
-     * @returns {xhr} returns the jQuery xhr object.
-     */
-    pjax: function(url, target) {
-      var container = target || '#pjax';
+    // *
+    //  * Wrapper function around $.pjax
+    //  * @param {string} url the be called.
+    //  * @param {string} target jQuery selector. The response data will replace the element with the passed selector.
+    //  * @returns {xhr} returns the jQuery xhr object.
+     
+    // pjax: function(url, target) {
+    //   var container = target || '#pjax';
 
-      var xhr = $.pjax({
-        url: url,
-        container: container
-      });
+    //   var xhr = $.pjax({
+    //     url: url,
+    //     container: container
+    //   });
 
-      return xhr;
-    },
+    //   return xhr;
+    // },
 
     /**
      * Fire a func request to the server.
@@ -260,19 +262,17 @@ Guido.Request = (function ($, _) {
         jsXHR = this.ajax({
           url: url,
           dataType: 'script',
-          cache: Guido.isProduction(),
+          cache: Guido.isProduction() === true,
         });
       }
 
       if ( !Guido.View.tplModulesLoaded[ module ] ) {
-        url = this.formUrl( 'tpl/' + _.snakeCase(module) + '.html' )
+        // url = this.formUrl( 'tpl/' + _.snakeCase(module) + '.html' )
+        url = TEMPLATE_PATH + '/' + _.snakeCase(module) + '.html';
         tplXHR = this.ajax({
           url: url,
-          headers: {
-            'X-PJAX': true
-          },
           cache: Guido.isProduction()
-        })
+        });
         tplXHR.then( function( data, status, xhr ) {
           Guido.View.compileTemplates( data );
           Guido.View.tplModulesLoaded[ module ] = true;

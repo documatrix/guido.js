@@ -30,7 +30,7 @@ Guido.View = (function ($, _) {
       Spooler: ''
     },
 
-    DEFAULT_MODULE: 'Monitor',
+    DEFAULT_MODULE: 'INDEX',
 
     /**
      * Initialized views
@@ -78,7 +78,7 @@ Guido.View = (function ($, _) {
         if( Guido.lastState ) {
           Guido.View.currentView = Guido.View.get( Guido.lastState.name );
         } else {
-          Guido.View.currentView = Guido.View.instance( 'Monitor' );
+          Guido.View.currentView = Guido.View.instance( Guido.View.DEFAULT_MODULE );
         }
       });
 
@@ -88,13 +88,13 @@ Guido.View = (function ($, _) {
     },
 
     instanceFromUrl: function() {
-      module = Guido.View.getModuleFromURL( window.location.href );
+      var module = Guido.View.getModuleFromURL();
       return Guido.View.instance( module );
     },
 
     modulize: function(module) {
       // @lodash4
-      return _.upperFirst(_.camelCase(module));
+      return _.upperFirst(_.camelCase(module || this.DEFAULT_MODULE));
     },
 
     get: function(module) {
@@ -125,9 +125,9 @@ Guido.View = (function ($, _) {
       //var $templates = $('script[type="text/x-handlebars-template"]');
       //Guido.View.compile($templates);
 
-      Guido.View.initHandlebarsHelper();
+      // Guido.View.initHandlebarsHelper();
 
-      // compile components
+      // // compile components
       Guido.View.compileTemplates(Guido.components);
 
       // compile all x-handlebars-templates from the template content
@@ -136,14 +136,10 @@ Guido.View = (function ($, _) {
       // compile all templates that are present in the (index.)html file
       Guido.View.compile($('script[type="text/x-handlebars-template"]'));
 
-      // append the base template to the body
-      //Guido.View.$template('baseTemplate', Guido).appendTo('body');
-      Guido.View.$template('navigation', Guido).replaceAll('#navigation');
-
       // append the template content to the content section
-//      var module = Guido.View.getModuleFromURL();
-//      Guido.View.instance(module);
-      //$("#pjax").append(Guido.templateContent);
+      var module = Guido.View.getModuleFromURL();
+      Guido.View.instance(module);
+      $("#Container").append(Guido.templateContent);
     },
 
     /**
@@ -161,18 +157,17 @@ Guido.View = (function ($, _) {
      * @returns {void}
      */
     compile: function($templates) {
-
-      if(!($templates instanceof $) || $templates.size() == 0) { return; }
+      if(!($templates instanceof $) || $templates.length == 0) { return; }
 
       var templatesArray = $templates;
 
-      if($templates.size() == 1) {
+      if($templates.length == 1) {
         templatesArray = [ $templates ];
       }
 
       _.each(templatesArray, function(template) {
-        var $template = $(template),
-            key = Guido.View.formatKey($template.attr('id'));
+      var $template = $(template),
+          key = Guido.View.formatKey($template.attr('id'));
 
         // allow overriding of templates ( without if condition )
         //if( !_.has(Handlebars.partials, key) || !_.has(this.templates, key)) {
@@ -250,92 +245,66 @@ Guido.View = (function ($, _) {
     },
 
     /**
-     * Render the top navigation
-     * TODO: this would be nice to mix into the actual module. Makes function easier.
-     *
-     * @param {object} view the view module
-     * @param {object} interpolation dynamic values for the title
-     * @param {boolean} withCart specifies if the cart should be rendered or not
-     */
-//    renderTopNav: function(view, interpolation, withCart) {
-//
-//      var title = 'CAP_TITLE_' + view.name.toUpperCase() + '_' + view.state.toUpperCase();
-//
-//      //var actions = Guido.View.ACTIONS[view.state];
-//      var actions = view.ACTIONS[view.state];
-//      if(view.ACTIONS !== undefined && view.ACTIONS[view.state] !== undefined) {
-//        actions = view.ACTIONS[view.state];
-//      }
-//
-//      var data = {
-//        title: Guido.t(title, interpolation),
-//        actions: actions,
-//        withCart: withCart
-//      };
-//
-//      Guido.View.$template('top_nav', data).replaceAll('#top-nav');
-//    },
-
-    /**
      * Extract the module from the form url parameter of window.location.search.
      * @returns {string} the modulized module name or the default module if it cannot be found in the url.
      */
-    getModuleFromURL: function(url) {
-      var param, module;
+    getModuleFromURL: function() {
+      var module;
 
-      param = Guido.Request.getURLParameter('form', url);
+      module = Guido.Request.getURLParameter( window.location.toString() );
 
-      if(param) {
-        module = param.match(/^tpl\/([a-zA-Z_]+)\.html?$/);
-
-        if(_.isArray(module) && module.length === 2) {
-          return Guido.View.modulize(module[1]);
+      if( !module ) {
+        module = {
+          module: Guido.View.DEFAULT_MODULE,
+          state: 'index',
+          params: []
         }
       }
 
-      return Guido.View.DEFAULT_MODULE;
+      // return result; // For now...
+      return module.name;
     },
 
-    handlebarsHelper: {
-      /**
-       * Translation helper that uses Guido.translate (shorthand Guido.t).
-       * @param {string} caption the translation key, i.e. the caption name in the db.
-       * @returns {string} the translated text.
-       */
-      t: function (caption, interpolation) {
-        return Guido.t(caption, interpolation.hash);
-      },
+    // handlebarsHelper: {
+    //   /**
+    //    * Translation helper that uses Guido.translate (shorthand Guido.t).
+    //    * @param {string} caption the translation key, i.e. the caption name in the db.
+    //    * @returns {string} the translated text.
+    //    */
+    //   t: function (caption, interpolation) {
+    //     return Guido.t(caption, interpolation.hash);
+    //   },
 
-      ago: function( caption, date ) {
-        t = moment( date );
-        t.locale( Guido.lang.toLowerCase() );
+    //   ago: function( caption, date ) {
+    //     t = moment( date );
+    //     t.locale( Guido.lang.toLowerCase() );
 
-        if( _.isNaN( t.date() ) ) {
-          return Guido.t( caption + '_INV' );
-        }
+    //     if( _.isNaN( t.date() ) ) {
+    //       return Guido.t( caption + '_INV' );
+    //     }
 
-        return Guido.t( caption, {
-          duration: t.fromNow(),
-          time: t.format('DD.MM.YYYY HH:MM')
-        });
-      },
+    //     return Guido.t( caption, {
+    //       duration: t.fromNow(),
+    //       time: t.format('DD.MM.YYYY HH:MM')
+    //     });
+    //   },
 
-      /**
-       * Handlebars debug functionality. You can write {{> debug }} in the template and it
-       * logs the value of this to the console.
-       * @param {string} optionalValue the key of this
-       */
-      debug: function (optionalValue) {
-        console.log("Current Context");
-        console.log("====================");
-        console.log(this);
+      // /**
+      //  * Handlebars debug functionality. You can write {{> debug }} in the template and it
+      //  * logs the value of this to the console.
+      //  * @param {string} optionalValue the key of this
+      //  */
+      // debug: function (optionalValue) {
+      //   console.log("Current Context");
+      //   console.log("====================");
+      //   console.log(this);
 
-        if (optionalValue) {
-          console.log("Value");
-          console.log("====================");
-          console.log(optionalValue);
-        }
-      },
+      //   if (optionalValue) {
+      //     console.log("Value");
+      //     console.log("====================");
+      //     console.log(optionalValue);
+      //   }
+      // },
       htmlSafe: function(text) {
         return new Handlebars.SafeString(text);
       },
@@ -374,17 +343,8 @@ Guido.View = (function ($, _) {
           default:
               return options.inverse(this);
         }
-      },
-      /**
-       * Sidebar navigation sub menu
-       * @param {object} info data of the sub menu
-       * @returns {object} the generated sub menu
-       */
-      accordionSubMenu: function (info) {
-        return Guido.View.template('accordionSubMenu', info);
       }
     }
-  };
 
   return module;
 

@@ -46,6 +46,8 @@ var app = (function ($) {
     },
 
     t: function(key, interpolation) {
+
+      return key;
       var tr            = Guido.captions[key],
         interpolation = interpolation || {};
 
@@ -63,10 +65,12 @@ var app = (function ($) {
     /**
      * Start the Guido Application
      */
-    start: function () {
-      // return Guido.Request.load('get_user_settings', {
-      //   elem_id: "Navigation"
-      // }, Guido.bootstrap);
+    start: function (cb) {
+      return $.when(cb.call(this))
+        .then(Guido.bootstrap)
+        .fail(function() {
+          console.warn('could not start Guido')
+        });
     },
 
     /**
@@ -75,14 +79,6 @@ var app = (function ($) {
      * @param {object} response the response object of the get_user_settings request.
      */
     bootstrap: function(response) {
-      // Guido.navigation = response.navigation;
-      // if( response.settings ) {
-      //   Guido.settings = response.settings;
-      //   Guido.menuCollapsed = ( String(response.settings.collapsed) === 'true' );
-      // } else {
-      //   Guido.menuCollapsed = false;
-      // }
-
       Guido.setup();
     },
 
@@ -91,10 +87,6 @@ var app = (function ($) {
      */
     setup: function() {
       Guido.View.init();
-      if ( typeof( Navigation ) !== "undefined" )
-      {
-        Guido.loadNavigation();
-      }
       Guido.Event.listen();
     },
 

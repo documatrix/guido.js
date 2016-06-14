@@ -65,7 +65,7 @@ Guido.Base.Actions = {
       state = history.state.state;
       this.applyHistoryState( history.state );
     }
-    else if( state = Guido.Request.getURLParameter('state') )
+    else if( state = Guido.Request.getURLParameter().state )
     {
       this.generateObjectFromUrl();
     }

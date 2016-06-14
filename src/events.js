@@ -91,9 +91,9 @@ Guido.Event = (function ($, _) {
         }
       });
       // hide popover when clicking
-      $(document).on('click', function(e) {
-        $('.popover').popover('hide');
-      });
+      // $(document).on('click', function(e) {
+      //   $('.popover').popover('hide');
+      // });
     },
     inputAction: function() {
       $(document).on('blur', ':input[data-action]:not(:button), span[contenteditable="true"][data-action]', function(event) {
@@ -117,23 +117,6 @@ Guido.Event = (function ($, _) {
 
     },
 
-    sidebar: function() {
-      $('#Sidebar').on( 'click', 'a.leaf', function( e ) {
-        var url, module;
-
-        e.preventDefault();
-        e.stopPropagation();
-
-        // NOTE: last state is saved in Guido.View.instance
-        // if( Guido.View.currentView ) {
-        //   Guido.View.currentView.saveLastState();
-        // }
-
-        url = $(e.currentTarget).attr('href');
-        module = Guido.View.getModuleFromURL(url);
-        Guido.View.instance( module ).index();
-      });
-    },
     onpopstate: function() {
       window.onpopstate = function(event) {
         var module, historyState;
@@ -148,6 +131,8 @@ Guido.Event = (function ($, _) {
         // if( Guido.View.currentView ) {
         //   Guido.View.currentView.saveLastState();
         // }
+
+        console.log('iamhere module: ', module)
 
         Guido.View.instance( module ).load();
       }
