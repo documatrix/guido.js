@@ -4,6 +4,8 @@ window.Guido.Index = (function ($, _) {
 
   var module = {
 
+    params: [ "id" ],
+
     ACTIONS: {
 
       INDEX: [

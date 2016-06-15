@@ -7,7 +7,7 @@
 <body>
 
 	<div id="content">
-		Loading ... 
+		Loading ...
 	</div>
 
 	<script type="text/javascript" src="vendor/jquery.min.js"></script>
@@ -20,6 +20,8 @@
 		Guido.MODULE_PATH = window.location.origin + "/examples/uidemo/js/modules";
 		Guido.TEMPLATE_PATH = window.location.origin + "/examples/uidemo/js/tpl";
 	</script>
+	<script type="text/javascript" src="../src/session.js"></script>
+	<script type="text/javascript" src="../src/router.js"></script>
 	<script type="text/javascript" src="../src/request.js"></script>
 	<script type="text/javascript" src="../src/view.js"></script>
 	<script type="text/javascript" src="../src/events.js"></script>
@@ -37,7 +39,8 @@
 
 		$(document).ready(function() {
 			Guido.start(function() {
-				Guido.View.instanceFromUrl().load();
+				Guido.View.instance( "index" ).load();
+				// Guido.View.instanceFromUrl().load();
 			})
 		})
 	</script>

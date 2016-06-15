@@ -45,7 +45,7 @@ Guido.Request = (function ($, _) {
 
     home: function() {
       if(!_.isString(Guido.Request.HOME)) {
-        HOME = BASE_PATH + Guido.Request.getSessionString();
+        HOME = BASE_PATH + Guido.Session.getSessionString();
       }
       return HOME;
     },
@@ -57,30 +57,9 @@ Guido.Request = (function ($, _) {
      * @param {string} url the url to be searched
      * @returns {string} the decoded value of the searched parameter or undefined if not found.
      */
-    getURLParameter: function (url) {
-
-      var params;
-
-      if( ! url ) return false;
-
-      params = url.replace(document.querySelector('base').href, '').replace('#', '');
-
-      if( params[0] == '/' ) {
-        params = params.substr(1);
-      }
-
-      if( params.indexOf('index.html') >= 0 ) {
-        return params;
-      }
-      
-      params = params.split('/');
-
-      return {
-        name: params.shift(),
-        state: params.shift() || 'index',
-        params: params
-      }
-
+    getURLParameter: function (param, url) {
+      var params = Guido.routes.resolve( url )[ 2 ];
+      return param ? params[ param ] : params;
     },
 
     /**

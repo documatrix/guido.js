@@ -46,7 +46,7 @@ var app = (function ($) {
     },
 
     t: function(key, interpolation) {
-
+      // TODO implement!!!
       return key;
       var tr            = Guido.captions[key],
         interpolation = interpolation || {};
@@ -65,12 +65,12 @@ var app = (function ($) {
     /**
      * Start the Guido Application
      */
-    start: function (cb) {
-      return $.when(cb.call(this))
-        .then(Guido.bootstrap)
-        .fail(function() {
-          console.warn('could not start Guido')
-        });
+    start: function ( callback ) {
+      this.bootstrap();
+
+      if( _.isFunction( callback ) ) {
+        callback();
+      }
     },
 
     /**
@@ -79,31 +79,9 @@ var app = (function ($) {
      * @param {object} response the response object of the get_user_settings request.
      */
     bootstrap: function(response) {
-      Guido.setup();
-    },
-
-    /**
-     * Setup the view module, the navigation and event listeners.
-     */
-    setup: function() {
+      this.routes = new Guido.Router();
       Guido.View.init();
       Guido.Event.listen();
-    },
-
-    /**
-     * Start the navigation *magic*
-     */
-    loadNavigation: function () {
-      Navigation.initialize();
-      if (Guido.menuCollapsed) {
-        $("body").addClass("collapsedMenu");
-      } else {
-        $("body").removeClass("collapsedMenu");
-      }
-
-      if (Guido.menuCollapsed) {
-        Navigation.instantCollapseMenu();
-      }
     },
 
     isProduction: function() {

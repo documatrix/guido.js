@@ -83,7 +83,6 @@ Guido.Event = (function ($, _) {
             console.log("clicked");
 
         if(action) {
-          //Guido.Request.toHistory(action);
           Guido.Event.delegate(event, action);
           // return false does preventDefault + stopPropagation
           // TODO: other events firing on the currentTarget?
@@ -101,18 +100,18 @@ Guido.Event = (function ($, _) {
         return false;
       });
     },
-    toggle: function() {
-      $(document).on('click', '.jtable-title', function(event) {
-        Guido.currentTable.toggle($(event.currentTarget));
-      });
+    // toggle: function() {
+    //   $(document).on('click', '.jtable-title', function(event) {
+    //     Guido.currentTable.toggle($(event.currentTarget));
+    //   });
 
-      $(document).on("click", '.panel-heading.toggable', function () {
-        $(this).find(".headerIcon")
-          .toggleClass("fa-arrow-down")
-          .toggleClass("fa-arrow-right");
-        $(this).next(".panel-body").slideToggle(500);
-      });
-    },
+    //   $(document).on("click", '.panel-heading.toggable', function () {
+    //     $(this).find(".headerIcon")
+    //       .toggleClass("fa-arrow-down")
+    //       .toggleClass("fa-arrow-right");
+    //     $(this).next(".panel-body").slideToggle(500);
+    //   });
+    // },
     mousedown: function() {
 
     },
@@ -128,9 +127,9 @@ Guido.Event = (function ($, _) {
         }
 
         // NOTE: last state is saved in Guido.View.instance
-        if( Guido.View.currentView ) {
-          Guido.View.currentView.saveLastState();
-        }
+        // if( Guido.View.currentView ) {
+        //   Guido.View.currentView.saveLastState();
+        // }
 
         Guido.View.instance( module.name ).load();
       }

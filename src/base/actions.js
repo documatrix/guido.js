@@ -65,13 +65,11 @@ Guido.Base.Actions = {
       state = history.state.state;
       this.applyHistoryState( history.state );
     }
-    else if( state = Guido.Request.getURLParameter().state )
-    {
-      this.generateObjectFromUrl();
-    }
     else
     {
-      state = Guido.View.STATE.INDEX;
+      var route = Guido.routes.resolve();
+      state = route[ 1 ] || Guido.View.STATE.INDEX;
+      this.object = _.extend( {}, this.defaultObject, route[ 2 ] );
     }
 
     if( func = this.moduleFunc( state ) ) {

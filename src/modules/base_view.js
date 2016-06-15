@@ -15,6 +15,8 @@ Guido.BaseView = function( module ) {
 
   this.name = module;
 
+  Guido.routes.register( this );
+
   Guido.View.register( module, this );
 
   this.mixinActions();
