@@ -39,12 +39,6 @@ Guido.Request = (function ($, _) {
 
   var module = {
 
-    updatePaths: function() {
-      BASE_PATH = Guido.BASE_PATH;
-      MODULE_PATH = Guido.MODULE_PATH;
-      TEMPLATE_PATH = Guido.TEMPLATE_PATH;
-    },
-
     base: function() {
       return BASE_PATH;
     },
@@ -86,6 +80,7 @@ Guido.Request = (function ($, _) {
         state: params.shift() || 'index',
         params: params
       }
+
     },
 
     /**

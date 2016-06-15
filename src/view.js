@@ -89,7 +89,7 @@ Guido.View = (function ($, _) {
 
     instanceFromUrl: function() {
       var module = Guido.View.getModuleFromURL();
-      return Guido.View.instance( module );
+      return Guido.View.instance( module.name );
     },
 
     modulize: function(module) {
@@ -138,7 +138,7 @@ Guido.View = (function ($, _) {
 
       // append the template content to the content section
       var module = Guido.View.getModuleFromURL();
-      Guido.View.instance(module);
+      Guido.View.instance(module.name);
       $("#Container").append(Guido.templateContent);
     },
 
@@ -262,7 +262,7 @@ Guido.View = (function ($, _) {
       }
 
       // return result; // For now...
-      return module.name;
+      return module;
     },
 
     // handlebarsHelper: {

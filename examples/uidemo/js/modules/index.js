@@ -18,7 +18,6 @@ window.Guido.Index = (function ($, _) {
     },
 
     buttons: {
-
       sayHello: {
         dataAction: '@sayHello',
         btnClasses: 'btn-primary btn-ok',
@@ -29,7 +28,13 @@ window.Guido.Index = (function ($, _) {
     // Actions
     index: function() {
       this._index();
-      alert('index')
+      console.log('this is index')
+    },
+
+    blue: function() {
+      this.changeState('blue');
+      this.render()
+      console.log('this is blue')
     }
 
   };

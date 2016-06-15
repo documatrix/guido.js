@@ -61,7 +61,7 @@ Guido.Base.Record = {
   getRecordRemote: function( id, callback ) {
     var options = {}, url;
 
-    id = id || Guido.Request.getURLParameter( this.idCol );
+    id = id || Guido.Request.getURLParameter( this.idCol ).name;
 
     if( !id ) {
       return this.malformedUrlFallback( Guido.t( 'CAP_ERR_MALFORMED_URL', { url: window.location.href } ) );
@@ -187,7 +187,7 @@ Guido.Base.Record = {
   },
 
   generateObjectFromUrl: function() {
-    var params = _.omit(Guido.Request.getURLParameter(), 'form', 'func', 'session_id', 'state');
+    var params = _.omit(Guido.Request.getURLParameter( window.location.toString() ).name, 'form', 'func', 'session_id', 'state');
     this.object = _.extend({}, this.defaultObject, params);
   },
 

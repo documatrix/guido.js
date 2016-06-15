@@ -132,7 +132,7 @@ Guido.Event = (function ($, _) {
           Guido.View.currentView.saveLastState();
         }
 
-        Guido.View.instance( module ).load();
+        Guido.View.instance( module.name ).load();
       }
     }
   };
