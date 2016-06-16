@@ -35,7 +35,7 @@ window.Guido.Index = (function ($, _) {
 
     blue: function() {
       this.changeState('blue');
-      this.render()
+      this.render();
       console.log('this is blue')
     }
 

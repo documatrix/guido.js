@@ -1,6 +1,4 @@
-Guido.Router = function () {
-
-};
+Guido.Router = function () {};
 
 Guido.Router.prototype  = (function ($, _) {
 
@@ -36,20 +34,18 @@ Guido.Router.prototype  = (function ($, _) {
           if( module == null ) {
             module = routes[ part ];
           }
-          lastModule = routes[ part ];
-          action = options.shift();
-          // TODO check if module is defined and action is available
-          this.assignParamsFromModule( lastModule, options, params );
-          // action = options.pop();
 
-          // if( options.length == 1 ) {
-          //   action = options.pop();
-          // } else if( options.length == 0 ) {
-          //   action = "load";
-          // } else {
+          lastModule = routes[ part ];
+          this.assignParamsFromModule( lastModule, options, params );
+
+          if( params._action_ ) {
+            action = params._action_;
+          }
+
           if( options.length > 0) {
             throw new Error( "Cannot determine which action to call in " + part + ": " + options.toString() );
           }
+
           options = [];
         } else {
           options.push( part );
@@ -63,16 +59,37 @@ Guido.Router.prototype  = (function ($, _) {
       // return module[ action ]( params );
     },
 
-    module: function() {
-      return this.resolve()[ 0 ];
+    makeRoute: function( module ) {
+      var url = Guido.config.basePath + '#/',  options = [];
+
+      url += _.snakeCase( module.name );
+
+      for( var i = 0; i < module.params.length; i++ ) {
+        v = module.object[ module.params[ i ] ];
+        if( v ) {
+          options.push( v );
+        }
+      }
+
+      if( options.length > 0 ) {
+        url += '/' + options.join( '/' );
+      }
+
+      url += '/' + ( module.state || '' );
+
+      return url;
     },
 
-    action: function() {
-      return this.resolve()[ 1 ];
+    module: function( url ) {
+      return this.resolve( url )[ 0 ];
     },
 
-    params: function() {
-      return this.resolve()[ 2 ];
+    action: function( url ) {
+      return this.resolve( url )[ 1 ];
+    },
+
+    params: function( url ) {
+      return this.resolve( url )[ 2 ];
     },
 
     register: function( module ) {
@@ -100,8 +117,15 @@ Guido.Router.prototype  = (function ($, _) {
         mp = module.params.split( "/" );
       }
 
+      // the first option may be the module action to call.
+      action = options[ 0 ];
+
       for( var i = 0; i < mp.length; i++ ) {
         params[ mp[ i ] ] = options.pop();
+      }
+
+      if( _.isFunction( module[ action ] ) ) {
+        params._action_ = action;
       }
 
       return params;

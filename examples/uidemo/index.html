@@ -14,8 +14,10 @@
 	<script type="text/javascript" src="vendor/jquery.min.js"></script>
 	<script type="text/javascript" src="vendor/handlebars.min.js"></script>
 	<script type="text/javascript" src="vendor/lodash.min.js"></script>
+	<script type="text/javascript" src="vendor/jquery.serialize-object.min.js"></script>
 
 	<script type="text/javascript" src="../src/guido.js"></script>
+	<script type="text/javascript" src="../src/settings.js"></script>
 	<script type="text/javascript">
 		Guido.BASE_PATH = window.location.origin + "/examples/uidemo";
 		Guido.MODULE_PATH = window.location.origin + "/examples/uidemo/js/modules";
@@ -39,6 +41,7 @@
 	<script type="text/javascript">
 
 		$(document).ready(function() {
+			Guido.config.basePath = '/examples/uidemo/';
 			Guido.start(function() {
 				// Guido.View.instance( "index" ).load();
 				Guido.View.instanceFromUrl().load();

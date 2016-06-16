@@ -10,71 +10,46 @@ if( typeof Guido.Base === 'undefined' ) {
 
 Guido.Base.Render = {
 
-  render: function(options) {
-    var options   = options || {};
+  render: function( options ) {
+    // Guido.View.replaceTemplate( Guido.config.content.target,
+    //                             this.stateTemplateName(),
+    //                             options || {} );
 
-    // change to new state
-    //this.changeState(state);
+    this.dom( Guido.config.content.target, this.stateTemplate( options || {} ) );
 
-    // top nav
-    this.renderTopNav(options);
 
-    // render notification
-    this.notifications.render();
+    this.renderComponent( 'notifications', this.notifications.notifications, true );
 
-    // content
-    $('#content').html(this.stateTemplate(options));
-
-    var tableOptions = this.stateTableOptions();
-    if(tableOptions) {
-      this.table = new Guido.TableView(tableOptions, this);
-    }
+    this.renderComponent( 'toolbar', this.renderActions() );
   },
 
-  reloadTable: function() {
-    if(this.table) {
-      this.table.reload();
+  renderComponent: function( name, options, replace ) {
+    config = Guido.config.components[ name ];
+
+    if( !config.render ) {
+      return;
     }
+
+    context = _.extend( {}, config.options, options );
+    component = Guido.View.$template( config.tpl, context );
+
+    replace = _.isUndefined( replace ) ? config.replace : replace;
+
+    this.dom( config.target, component, replace );
   },
 
-  /**
-   * Render the top navigation
-   * @param {object} interpolation dynamic values for the title
-   * @param {boolean} withCart specifies if the cart should be rendered or not
-   */
-  renderTopNav: function(interpolation, withCart) {
-
-    var title = this.stateTitleName();
-    actions = this.ACTIONS[this.state] || [];
-
-    var data = {
-      title: Guido.t(title, interpolation),
-      actions: actions,
-      withCart: false,
-      icon: Guido.View.ICON[ this.state ] || Guido.View.ICON[ this.name ]
-    };
-
-    if(_.isObject(this.cart)) {
-      data.withCart = _.isBoolean(withCart) ? withCart : this.withCart;
-      data.count = this.cart.size();
-    }
-
-    $('title').html('Guido - ' + data.title);
-
-    if( this.state === Guido.View.STATE.INDEX ) {
-      Guido.View.replaceTemplate( '#top-nav', 'top_nav', data );
+  dom: function( target, html, replace ) {
+    if( replace ) {
+      $( target ).replaceWith( html );
     } else {
-      Guido.View.replaceTemplate( '#top-nav', 'top_nav_detail', data );
+      $( target ).html( html );
     }
-  },
-
-  renderToolbar: function( actions ) {
-    var $toolbar = Guido.View.$template( 'toolbar', this.renderActions( actions ) );
-    $("#toolbar").html( $toolbar );
   },
 
   renderActions: function( actions ) {
     var rendered = "";
+
+    actions = actions || this.stateActions();
 
     for( var i = 0; i < actions.length; i++ ) {
       action = actions[ i ];
@@ -92,37 +67,5 @@ Guido.Base.Render = {
 
     return rendered;
 
-  },
-
-  toggleSelect: function( id, args, e ) {
-    this.table.toggleSelect( id );
-    var $icon = $(e.currentTarget).find('.glyphicon')
-    if( this.isRecordSelected( id ) ) {
-      $icon.removeClass('glyphicon-ok').addClass('glyphicon-remove');
-    } else {
-      $icon.removeClass('glyphicon-remove').addClass('glyphicon-ok');
-    }
-  },
-
-  toggleCartItem: function(id, action) {
-    var record = this.getRecord(id),
-        item = this.cart.get(id);
-    if(!record) {
-      return;
-    }
-
-    if(item && item.action === action) {
-      $('#' + this.cartActionId(id, action)).removeClass('active');
-      this.cart.remove(id);
-      $('#' + this.cartReasonId(id)).addClass('inactive').focus();
-    } else {
-      var $el = $('#' + this.cartActionId(id, action));
-      $el.closest('tr').find('.table-action a').removeClass('active');
-      $el.addClass('active');
-      this.cart.add(id, record, action);
-      $('#' + this.cartReasonId(id)).removeClass('inactive').focus();
-    }
-
-    return true;
   },
 };

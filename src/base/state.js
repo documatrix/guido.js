@@ -144,6 +144,10 @@ Guido.Base.State = {
     return 'Guido.' + Guido.View.modulize(this.name) + '.' + action;
   },
 
+  stateActions: function() {
+    return this.ACTIONS[ this.state ] || [];
+  },
+
   /**
    * Generate request parameter func.
    * @returns {string} the value for request parameter func

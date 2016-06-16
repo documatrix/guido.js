@@ -62,18 +62,29 @@ Guido.Request = (function ($, _) {
       return param ? params[ param ] : params;
     },
 
+    hasHistory: function()  {
+      if( _.isUndefined( Guido.history ) ) {
+        $.support.pjax =
+          window.history && window.history.pushState && window.history.replaceState &&
+          // pushState isn't reliable on iOS until 5.
+          !navigator.userAgent.match(/((iPod|iPhone|iPad).+\bOS\s+[1-4]\D|WebApps\/.+CFNetwork)/);
+        Guido.history = $.support.pjax;
+      }
+      return Guido.history;
+    },
+
     /**
      * Push a action event to the history.
      * @returns {boolean} True if the action was pushed to the history, false otherwise.
      */
     toHistory: function() {
-      if($.support.pjax) {
+      if( this.hasHistory() ) {
         var view = Guido.View.currentView,
-            entry = Guido.Request.formUrl(view.tplFile(), view.toParams());
+            entry = Guido.routes.makeRoute( view );
 
         // only push to history if the module/state changed
         if( view.stateChanged() ) {
-          history.pushState(view.serialize(), '', entry);
+          history.pushState( view.serialize(), '', entry );
           Guido.Notification.debug('PUSH TO HISTORY: ' + entry);
         }
 

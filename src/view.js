@@ -280,9 +280,8 @@ Guido.View = (function ($, _) {
      * @returns {string} the modulized module name or the default module if it cannot be found in the url.
      */
     getModuleFromURL: function( url ) {
-      var route = Guido.routes.resolve( url );
-      return route[ 0 ];
-    },
+      return Guido.routes.module( url );
+   },
 
     handlebarsHelper: {
       /**
