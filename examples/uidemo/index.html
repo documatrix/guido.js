@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
 	<title>Guido.js GUI demo</title>
 	<base href="/examples/uidemo">
 </head>
@@ -19,9 +18,9 @@
 	<script type="text/javascript" src="../src/guido.js"></script>
 	<script type="text/javascript" src="../src/settings.js"></script>
 	<script type="text/javascript">
-		Guido.BASE_PATH = window.location.origin + "/examples/uidemo";
-		Guido.MODULE_PATH = window.location.origin + "/examples/uidemo/js/modules";
-		Guido.TEMPLATE_PATH = window.location.origin + "/examples/uidemo/js/tpl";
+		Guido.config.basePath = window.location.origin + "/examples/uidemo";
+		Guido.config.modulePath = Guido.config.basePath + "/js/modules";
+		Guido.config.templatePath = Guido.config.basePath + "/js/tpl";
 	</script>
 	<script type="text/javascript" src="../src/session.js"></script>
 	<script type="text/javascript" src="../src/router.js"></script>
@@ -41,10 +40,9 @@
 	<script type="text/javascript">
 
 		$(document).ready(function() {
-			Guido.config.basePath = '/examples/uidemo/';
 			Guido.start(function() {
-				// Guido.View.instance( "index" ).load();
-				Guido.View.instanceFromUrl().load();
+				Guido.View.instance( "index" ).load();
+				// Guido.View.instanceFromUrl().load();
 			})
 		})
 	</script>

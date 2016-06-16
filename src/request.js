@@ -150,7 +150,7 @@ Guido.Request = (function ($, _) {
       module = Guido.View.modulize( module );
 
       if( !Guido[module] ) {
-        url = MODULE_PATH + '/' + _.snakeCase(module) + '.js';
+        url = Guido.config.modulePath + '/' + _.snakeCase(module) + '.js';
         jsXHR = this.ajax({
           url: url,
           dataType: 'script',
@@ -160,7 +160,7 @@ Guido.Request = (function ($, _) {
 
       if ( !Guido.View.tplModulesLoaded[ module ] ) {
         // url = this.formUrl( 'tpl/' + _.snakeCase(module) + '.html' )
-        url = TEMPLATE_PATH + '/' + _.snakeCase(module) + '.html';
+        url = Guido.config.templatePath + '/' + _.snakeCase(module) + '.html';
         tplXHR = this.ajax({
           url: url,
           cache: Guido.isProduction()

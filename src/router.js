@@ -25,7 +25,11 @@ Guido.Router.prototype  = (function ($, _) {
         path = window.location.toString();
       }
 
-      path = path.replace( qs, '' ).split( '/' ).reverse();
+      path = path
+        .replace( Guido.config.basePath, '' )
+        .replace( qs, '' )
+        .split( '/' )
+        .reverse();
 
       for( var i = 0; i < path.length; i++ ) {
         part = path[ i ];
