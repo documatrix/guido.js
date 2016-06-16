@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta charset="utf-8">
 	<title>Guido.js GUI demo</title>
 	<base href="/examples/uidemo">
 </head>
@@ -39,8 +40,8 @@
 
 		$(document).ready(function() {
 			Guido.start(function() {
-				Guido.View.instance( "index" ).load();
-				// Guido.View.instanceFromUrl().load();
+				// Guido.View.instance( "index" ).load();
+				Guido.View.instanceFromUrl().load();
 			})
 		})
 	</script>

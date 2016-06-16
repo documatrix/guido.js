@@ -30,7 +30,7 @@ Guido.View = (function ($, _) {
       Spooler: ''
     },
 
-    DEFAULT_MODULE: 'Monitor',
+    DEFAULT_MODULE: 'INDEX',
 
     /**
      * Initialized views
@@ -78,7 +78,7 @@ Guido.View = (function ($, _) {
         if( Guido.lastState ) {
           Guido.View.currentView = Guido.View.get( Guido.lastState.name );
         } else {
-          Guido.View.currentView = Guido.View.instance( 'Monitor' );
+          Guido.View.currentView = Guido.View.instance( Guido.View.DEFAULT_MODULE );
         }
       });
 
@@ -137,8 +137,8 @@ Guido.View = (function ($, _) {
       Guido.View.compile($('script[type="text/x-handlebars-template"]'));
 
       // append the base template to the body
-      //Guido.View.$template('baseTemplate', Guido).appendTo('body');
-      Guido.View.$template('navigation', Guido).replaceAll('#navigation');
+      // Guido.View.$template('baseTemplate', Guido).appendTo('body');
+      // Guido.View.$template('navigation', Guido).replaceAll('#navigation');
 
       // append the template content to the content section
 //      var module = Guido.View.getModuleFromURL();
