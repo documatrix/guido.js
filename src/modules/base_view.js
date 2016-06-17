@@ -69,6 +69,12 @@ Guido.BaseView.prototype = (function ($, _) {
     reserved: [],
 
     /**
+     * Array of possible request parameter id names.
+     * @type {Array}
+     */
+    params: [],
+
+    /**
      * The current state of the view.
      */
     state: 'INDEX',
