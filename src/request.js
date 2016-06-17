@@ -202,6 +202,8 @@ Guido.Request = (function ($, _) {
         Guido.Request.done(data, status, response, callback, error_callback);
       })
       .fail( function(response, error, message) {
+        json = JSON.parse( response.responseText );
+        error_callback( json, message, response );
         Guido.Notification.error(message);
       });
     },
