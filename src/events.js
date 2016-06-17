@@ -118,9 +118,15 @@ Guido.Event = (function ($, _) {
 
     onpopstate: function() {
       window.onpopstate = function(event) {
-        var module, historyState;
+        var module, historyState, state;
 
-        module = _.isObject(event.state) ? event.state.name : undefined;
+        state = ! event.state ? history.state : event.state;
+
+        if( ! state ) {
+          return window.location.reload();
+        }
+
+        module = _.isObject(event.state) ? state.name : undefined;
 
         if( !module ) {
           module = Guido.View.getModuleFromURL();
