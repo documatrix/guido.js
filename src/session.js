@@ -75,7 +75,7 @@ Guido.Session = (function ($, _) {
     // },
 
     userFromStore: function() {
-      Guido.user = JSON.parse( localStorage.user || "" );
+      Guido.user = JSON.parse( localStorage.user || "{}" );
       // this.ajaxSetup();
       return Guido.user;
     },

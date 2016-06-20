@@ -92,6 +92,19 @@ Guido.Event = (function ($, _) {
       //   $('.popover').popover('hide');
       // });
     },
+    formEnter: function() {
+      $(document).on('keydown', function(event) {
+        if (event.which == 13 && $(event.target ).is(':input')) {
+          var $form = $(event.target).closest('form');
+              action = $form.data('action');
+
+          if(action) {
+            Guido.Event.delegate(event, action);
+            return false;
+          }
+        }
+      });
+    },
     inputAction: function() {
       $(document).on('blur', ':input[data-action]:not(:button), span[contenteditable="true"][data-action]', function(event) {
         Guido.Event.delegate(event, $(event.currentTarget).data('action'));
