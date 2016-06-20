@@ -76,11 +76,9 @@ Guido.Event = (function ($, _) {
 
   events = {
     click: function() {
-      $(document).on('click', 'button, a', function(event) {
+      $(document).on('click', 'button, a, tr', function(event) {
         var $el    = $(event.currentTarget),
             action = $el.data('action');
-
-            console.log("clicked");
 
         if(action) {
           Guido.Event.delegate(event, action);

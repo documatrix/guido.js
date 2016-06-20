@@ -98,8 +98,6 @@ Guido.Base.State = {
   stateTemplate: function(options) {
     var name= this.stateTemplateName();
 
-    console.log(name)
-
     if(_.isFunction(Guido.View.templates[name])) {
       return Guido.View.template(this.stateTemplateName(), options);
     }

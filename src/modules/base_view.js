@@ -256,6 +256,13 @@ Guido.BaseView.prototype = (function ($, _) {
       // extend actions with module actions
       this.ACTIONS = _.extend({}, this.ACTIONS, Gui.do[module]['ACTIONS']);
 
+      // when the module is resolved, reset the base actions not to be called
+      // with r() wrapper.
+      _.reduce( Guido.Base.Actions, function( self, val, key ) {
+        self[ key ] = val;
+        return self;
+      }, this);
+
       _.reduce(_.omit(Gui.do[module], 'ACTIONS', 'resolve'), function(self, val, key) {
         // keep overwritten functions with a leading dash.
         if(_.isFunction(self[key])) {
