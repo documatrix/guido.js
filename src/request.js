@@ -204,9 +204,10 @@ Guido.Request = (function ($, _) {
         Guido.Request.done(data, status, response, callback, errorCallback);
       })
       .fail( function(response, error, message) {
-        json = {};
+        var json = {},
+            contentType = response.getResponseHeader( 'Content-Type' ) || "";
 
-        if( response.getResponseHeader( 'Content-Type' ).match( "json") ) {
+        if( contentType.match( "json") && response.responseText ) {
           json = JSON.parse( response.responseText );
         }
 

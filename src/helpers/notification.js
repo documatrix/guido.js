@@ -185,6 +185,12 @@ Guido.Notification.prototype = (function ($, _, Handlebars) {
       _.each(this.notifications.debugs, function(message) {
         console.log("[DEBUG] " + message);
       });
+
+      Guido.Event.fire( "guido:notified", {
+        target: document.getElementById( 'notifications' ),
+        notifications: this.notifications
+      });
+
       this.clear();
     },
 

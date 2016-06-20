@@ -128,11 +128,28 @@ Guido.Event = (function ($, _) {
     },
     afterRender: function() {
       Guido.Event.addListener( document, 'guido:rendered', function( event ) {
-        target = event.detail;
+        var target = event.detail;
         if( target && _.isFunction( target.rendered ) ) {
           return target.rendered();
         } else {
           return false;
+        }
+      });
+    },
+    notified: function() {
+      Guido.Event.addListener( document, 'guido:notified', function( event ) {
+        var target = event.detail.target,
+            notifications = event.detail.notifications;
+            txt = "";
+
+        for( var type in notifications ) {
+          for( var idx in notifications[ type ] ) {
+            txt += notifications[type][idx] + "\n";
+          }
+        }
+
+        if( txt.length > 0 ) {
+          target.MaterialSnackbar.showSnackbar( { message: txt } );
         }
       });
     },
