@@ -51,6 +51,11 @@ Guido.Session = (function ($, _) {
       // this.ajaxSetup();
     },
 
+    destroy: function() {
+      Guido.user = {};
+      this.store( {} );
+    },
+
     store: function( user ) {
       if (typeof(Storage) === "undefined") {
         return;

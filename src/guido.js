@@ -29,28 +29,28 @@ window._b = function( ctx, func ) {
 };
 
 // cloaking
-(function() {
-  var style = document.createElement('style');
-  style.setAttribute('media', 'screen');
+// (function() {
+//   var style = document.createElement('style');
+//   style.setAttribute('media', 'screen');
 
-  style.appendChild(document.createTextNode(""));
+//   style.appendChild(document.createTextNode(""));
 
-  document.head.appendChild(style)
-  style.sheet.insertRule('.guido__cloak { display: none; }',0);
+//   document.head.appendChild(style)
+//   style.sheet.insertRule('.guido__cloak { display: none; }',0);
 
-  $(document).on('guidoloaded', function() {
-    var cloak = document.querySelector('.guido__cloak'),
-        cssClass;
+//   $(document).on('guidoloaded', function() {
+//     var cloak = document.querySelector('.guido__cloak'),
+//         cssClass;
 
-    cssClass = cloak.getAttribute('class').replace('guido__cloak', '');
+//     cssClass = cloak.getAttribute('class').replace('guido__cloak', '');
 
-    setTimeout(function() { 
-      cloak.setAttribute('class', cssClass);
-    }, 100);
-  });
+//     setTimeout(function() {
+//       cloak.setAttribute('class', cssClass);
+//     }, 100);
+//   });
 
-  return style.sheet
-})()
+//   return style.sheet
+// })()
 
 /**
  * Entry point to the Guido App
