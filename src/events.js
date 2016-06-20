@@ -71,6 +71,31 @@ Guido.Event = (function ($, _) {
           args = $el.data('args') || {};
 
       return { id: id, args: args };
+    },
+
+    addListener: function( target, name, handler ) {
+      if ( target.addEventListener ) {
+        target.addEventListener(name, handler);
+      } else {
+        target.attachEvent('on' + name, function() {
+          handler.call( target );
+        });
+      }
+    },
+
+    fire( name, options, target ) {
+      var event;
+
+      target = target || document;
+
+      if( window.CustomEvent ) {
+        event = new CustomEvent( name, { detail: options } );
+      } else {
+        event = document.createEvent( 'CustomEvent' );
+        event.initCustomEvent( name, true, true, { detail: options } );
+      }
+
+      target.dispatchEvent( event );
     }
   };
 
@@ -87,14 +112,10 @@ Guido.Event = (function ($, _) {
           return false;
         }
       });
-      // hide popover when clicking
-      // $(document).on('click', function(e) {
-      //   $('.popover').popover('hide');
-      // });
     },
     formEnter: function() {
       $(document).on('keydown', function(event) {
-        if (event.which == 13 && $(event.target ).is(':input')) {
+        if (event.which == 13 && $(event.target ).is(':input:not(textarea)')) {
           var $form = $(event.target).closest('form');
               action = $form.data('action');
 
@@ -102,6 +123,16 @@ Guido.Event = (function ($, _) {
             Guido.Event.delegate(event, action);
             return false;
           }
+        }
+      });
+    },
+    afterRender: function() {
+      Guido.Event.addListener( document, 'guido:rendered', function( event ) {
+        target = event.detail;
+        if( target && _.isFunction( target.rendered ) ) {
+          return target.rendered();
+        } else {
+          return false;
         }
       });
     },

@@ -1,7 +1,8 @@
 Guido.config = {
   basePath: '/',
   defaults: {
-    module: 'drafts'
+    module: 'drafts',
+    fallback: '_default_view'
   },
   content: {
     target: '#content',

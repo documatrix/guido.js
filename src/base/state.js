@@ -96,7 +96,7 @@ Guido.Base.State = {
    * @returns {String} The state template as a String
    */
   stateTemplate: function(options) {
-    var name= this.stateTemplateName();
+    var name = this.stateTemplateName();
 
     if(_.isFunction(Guido.View.templates[name])) {
       return Guido.View.template(this.stateTemplateName(), options);
@@ -105,11 +105,19 @@ Guido.Base.State = {
     return Guido.View.template(this.defaultStateTemplateName(), options);
   },
 
+  stateComponent: function( options ) {
+    return (
+      Guido.View.template( this.stateComponentName( options.tpl ), options ) ||
+      Guido.View.template( this.defaultStateComponentName( options.tpl ), options ) ||
+      Guido.View.template( this.defaultComponentName( options.tpl ), options )
+    );
+  },
+
   /**
    * Return the default view template name.
    */
   defaultStateTemplateName: function() {
-    return ('_default_view_' + this.state).toLowerCase();
+    return ( Guido.config.defaults.fallback + this.state ).toLowerCase();
   },
 
   /**
@@ -117,6 +125,18 @@ Guido.Base.State = {
    */
   stateTemplateName: function() {
     return _.snakeCase(this.name + '_' + this.state);
+  },
+
+  defaultStateComponentName: function( component ) {
+    return this.defaultStateTemplateName() + '_' + component;
+  },
+
+  defaultComponentName: function( component ) {
+    return ( Guido.config.defaults.fallback + '_' + component ).toLowerCase();
+  },
+
+  stateComponentName: function( component ) {
+    return this.stateTemplateName() + '_' + component;
   },
 
   formTemplateName: function() {

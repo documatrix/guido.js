@@ -11,31 +11,31 @@ if( typeof Guido.Base === 'undefined' ) {
 Guido.Base.Render = {
 
   render: function( options ) {
-    // Guido.View.replaceTemplate( Guido.config.content.target,
-    //                             this.stateTemplateName(),
-    //                             options || {} );
-
     this.dom( Guido.config.content.target, this.stateTemplate( options || {} ) );
 
+    for( var component in Guido.config.components ) {
+      this.renderComponent( Guido.config.components[ component ], options );
+    }
 
-    this.renderComponent( 'notifications', this.notifications.notifications, true );
-
-    this.renderComponent( 'toolbar', this.renderActions() );
+    Guido.Event.fire( 'guido:rendered', this );
   },
 
-  renderComponent: function( name, options, replace ) {
-    config = Guido.config.components[ name ];
+  rendered: function() {
+    // do nothing...
+  },
 
+  renderComponent: function( config, options, replace ) {
     if( !config.render ) {
       return;
     }
 
     context = _.extend( {}, config.options, options );
-    component = Guido.View.$template( config.tpl, context );
+    component = this.stateComponent( config, context );
+    // component = Guido.View.$template( config.tpl, context );
 
     replace = _.isUndefined( replace ) ? config.replace : replace;
 
-    this.dom( config.target, component, replace );
+    return this.dom( config.target, component, replace );
   },
 
   dom: function( target, html, replace ) {
