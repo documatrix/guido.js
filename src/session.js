@@ -39,7 +39,7 @@ Guido.Session = (function ($, _) {
     },
 
     save: function( json ) {
-      if( !_.isObject( json ) || !json.session_id || !json.user_id ) {
+      if( !_.isObject( json ) || !json.session_id ) {
         throw new Error( "no session object passed" );
       }
 
