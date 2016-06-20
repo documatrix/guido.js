@@ -53,30 +53,6 @@ Guido.Base.Actions = {
     }
   },
 
-  load: function( action ) {
-    var func, state, historyState;
-
-    if( action )
-    {
-      state = action;
-    }
-    else if( !_.isEmpty( history.state ) )
-    {
-      state = history.state.state;
-      this.applyHistoryState( history.state );
-    }
-    else
-    {
-      var route = Guido.routes.resolve();
-      state = route[ 1 ] || Guido.View.STATE.INDEX;
-      this.object = _.extend( {}, this.defaultObject, route[ 2 ] );
-    }
-
-    if( func = this.moduleFunc( state ) ) {
-      this.withoutHistory( func );
-    }
-  },
-
   save: function( id, args, event ) {
     var self = this,
         state = '';

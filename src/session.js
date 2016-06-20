@@ -34,6 +34,47 @@ Guido.Session = (function ($, _) {
       Guido.Request.defaults.data.session_id = session;
     },
 
+    user: function() {
+      return Guido.user || this.userFromStore();
+    },
+
+    save: function( json ) {
+      if( !_.isObject( json ) || !json.session_id || !json.user_id ) {
+        throw new Error( "no session object passed" );
+      }
+
+      Guido.user = {
+        session_id: json.session_id,
+        user_id: json.user_id
+      };
+      this.store( Guido.user );
+      // this.ajaxSetup();
+    },
+
+    store: function( user ) {
+      if (typeof(Storage) === "undefined") {
+        return;
+      }
+
+      localStorage.setItem( "user", JSON.stringify( user ) );
+    },
+
+
+    // ajaxSetup: function() {
+    //   $.ajaxSetup({
+    //     beforeSend: function( jqXHR, settings ) {
+    //       settings.data = $.extend( settings.data, Guido.user );
+    //       return true;
+    //     }
+    //   });
+    // },
+
+    userFromStore: function() {
+      Guido.user = JSON.parse( localStorage.user || "" );
+      // this.ajaxSetup();
+      return Guido.user;
+    },
+
     /**
      * Destroy current session.
      */

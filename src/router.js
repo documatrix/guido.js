@@ -1,4 +1,11 @@
-Guido.Router = function () {};
+Guido.Router = function () {
+
+  for( var module in Gui.do ) {
+    if ( Gui.do.hasOwnProperty( module ) ) {
+      this.register( module );
+    }
+  }
+};
 
 Guido.Router.prototype  = (function ($, _) {
 
@@ -36,7 +43,8 @@ Guido.Router.prototype  = (function ($, _) {
         if( routes[ part ] ) {
 
           if( module == null ) {
-            module = routes[ part ];
+            // module = routes[ part ];
+            module = part;
           }
 
           lastModule = routes[ part ];
@@ -97,8 +105,21 @@ Guido.Router.prototype  = (function ($, _) {
     },
 
     register: function( module ) {
-      name = _.snakeCase( module.name );
-      this.routes[ name ] = module;
+      var m, name;
+
+      if( _.isString( module ) && Gui.do[ module ] ) {
+        m = Gui.do[ module ];
+        name = _.snakeCase( module );
+        m.params = m.params || [];
+      } else if( _.isObject( module ) ) {
+        m = module;
+        name = module.name;
+      } else {
+        return;
+      }
+
+      this.routes[ name ] = m;
+      // this.routes[ name ] = Gui.do[ module ];
     },
 
     setRoutes: function( routes ) {
@@ -123,14 +144,19 @@ Guido.Router.prototype  = (function ($, _) {
 
       // the first option may be the module action to call.
       action = options[ 0 ];
+      if( _.isFunction( module[ action ] ) ) {
+        params._action_ = action;
+        options.pop();
+      }
+
+      // while( ( option = options.pop() ) != null ) {
+      //   params[ mp[ i ] ] = option;
+      // }
 
       for( var i = 0; i < mp.length; i++ ) {
         params[ mp[ i ] ] = options.pop();
       }
 
-      if( _.isFunction( module[ action ] ) ) {
-        params._action_ = action;
-      }
 
       return params;
     },

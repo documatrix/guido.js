@@ -101,7 +101,7 @@ Guido.Request = (function ($, _) {
      * @param {function} callback success callback function.
      * @returns {jQuery promise} the jQuery XHR promise.
      */
-    load: function(func, data, callback, error_callback) {
+    load: function(func, data, callback, errorCallback) {
       var params;
 
       if(_.isFunction(data)) {
@@ -111,7 +111,7 @@ Guido.Request = (function ($, _) {
         params = this.buildParams(func, data);
       }
 
-      return this.ajax(params, callback, error_callback);
+      return this.ajax(params, callback, errorCallback);
     },
 
     /**
@@ -119,11 +119,11 @@ Guido.Request = (function ($, _) {
      * @param {string} func the route (sub) on the server.
      * @param {object} data the serialized form data.
      * @param {function} callback success callback function.
-     * @param {function} error_callback error callback function.
+     * @param {function} errorCallback error callback function.
      * @returns {jQuery promise} the jQuery XHR promise.
      */
-    save: function(func, data, callback, error_callback) {
-      return this.ajax(this.buildPostParams(func, data), callback, error_callback);
+    save: function(func, data, callback, errorCallback) {
+      return this.ajax(this.buildPostParams(func, data), callback, errorCallback);
     },
 
     /**
@@ -133,11 +133,11 @@ Guido.Request = (function ($, _) {
      * @param {function} callback success callback function.
      * @returns {jQuery promise} the jQuery XHR promise.
      */
-    destroy: function(func, ids, callback, error_callback) {
+    destroy: function(func, ids, callback, errorCallback) {
       var data   = _.isArray(ids) ? ids : [ ids],
           params = this.buildPostParams(func, data);
 
-      return this.ajax(params, callback, error_callback);
+      return this.ajax(params, callback, errorCallback);
     },
 
     /**
@@ -149,7 +149,7 @@ Guido.Request = (function ($, _) {
       var d = [], promise, jsXHR, tplXHR, url;
       module = Guido.View.modulize( module );
 
-      if( !Guido[module] ) {
+      if( !Gui.do[module] ) {
         url = Guido.config.modulePath + '/' + _.snakeCase(module) + '.js';
         jsXHR = this.ajax({
           url: url,
@@ -195,23 +195,51 @@ Guido.Request = (function ($, _) {
      Only recommended, when you need to change ajax params (like type, content...).
      Otherwise use request method.
      */
-    ajax: function (options, callback, error_callback) {
+    ajax: function (options, callback, errorCallback) {
+
+      this.addSession( options );
 
       // return the ajax function to provide promise functionality ($.when) for jQuery
       return $.ajax(options).done(function(data, status, response) {
-        Guido.Request.done(data, status, response, callback, error_callback);
+        Guido.Request.done(data, status, response, callback, errorCallback);
       })
       .fail( function(response, error, message) {
-        json = JSON.parse( response.responseText );
-        error_callback( json, message, response );
+        json = {};
+
+        if( response.getResponseHeader( 'Content-Type' ).match( "json") ) {
+          json = JSON.parse( response.responseText );
+        }
+
+        if( _.isFunction( errorCallback ) ) {
+          errorCallback( json, message, response );
+        } else {
+          var err = Guido.Request[ response.status ]
+          if( _.isFunction( err ) ) {
+            err( response, error, message );
+          }
+        }
+
         Guido.Notification.error(message);
       });
     },
 
-    done: function(data, status, response, callback, error_callback) {
-      var json = {},
+    addSession: function( options ) {
+      if( !options.data ) {
+        options.data = {};
+      }
+
+      _.extend( options.data, Guido.Session.user() );
+    },
+
+    401: function( response, error, message ) {
+      Guido.View.instance( 'auth' ).show();
+    },
+
+    done: function(data, status, response, callback, errorCallback) {
+      var json = data,
           contentType = response.getResponseHeader('content-type');
 
+      // docpipe does not respond with correct content type "application/json; charset=utf-8"
       if(contentType === 'text/json') {
         try {
           json = JSON.parse(data);
@@ -222,16 +250,9 @@ Guido.Request = (function ($, _) {
         }
       } else if(contentType === 'application/javascript') {
         json = { success: true };
-      } else {
-        if( contentType !== 'text/html' ) {
-          Guido.Notification.error(Guido.t('CAP_ERR_RESPONSE_NOT_JSON'));
-        }
-        if(_.isFunction(callback)) {
-          return callback(data, status,response);
-        }
       }
 
-      if(json.success) {
+      if( status === 'success' ) {
         if ( _.isObject( json.notifications ) ) {
           Guido.Notification.renderAll(json.notifications);
         }
@@ -241,9 +262,9 @@ Guido.Request = (function ($, _) {
         }
       } else {
         Guido.Notification.renderAll(json.notifications);
-        if ( _.isFunction( error_callback ) )
+        if ( _.isFunction( errorCallback ) )
         {
-          error_callback( json, status, response );
+          errorCallback( json, status, response );
         }
       }
     },

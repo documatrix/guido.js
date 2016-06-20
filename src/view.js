@@ -12,16 +12,16 @@ Guido.View = (function ($, _) {
      * Default view states
      */
     STATE: {
-      INDEX: 'INDEX',
-      SHOW: 'SHOW',
-      FORM: 'FORM',
-      NEW: 'NEW',
-      EDIT: 'EDIT',
-      CREATE: 'CREATE',
-      UPDATE: 'UPDATE',
-      CONFIRM_DESTROY: 'CONFIRM_DESTROY',
-      DESTROY: 'DESTROY',
-      SHOW_CART: 'SHOW_CART'
+      INDEX: 'index',
+      SHOW: 'show',
+      FORM: 'form',
+      NEW: 'new',
+      EDIT: 'edit',
+      CREATE: 'create',
+      UPDATE: 'update',
+      CONFIRM_DESTROY: 'confirm_destroy',
+      DESTROY: 'destroy',
+      SHOW_CART: 'show_cart'
     },
 
     ICON: {
@@ -89,7 +89,11 @@ Guido.View = (function ($, _) {
 
     instanceFromUrl: function() {
       module = Guido.View.getModuleFromURL( window.location.href );
-      return Guido.View.instance( module );
+      if( module ) {
+        return Guido.View.instance( module );
+      } else {
+        return Guido.View.instance( Guido.config.defaults.module );
+      }
     },
 
     modulize: function(module) {

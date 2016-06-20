@@ -9,13 +9,13 @@ Guido.BaseView = function( module ) {
 
   this.promise = arguments[1];
 
-  if( !this.promise && _.isUndefined(Guido[module])) {
+  if( !this.promise && _.isUndefined(Gui.do[module])) {
     throw new Error("Module not present");
   }
 
   this.name = module;
 
-  Guido.routes.register( this );
+  // Guido.routes.register( this );
 
   Guido.View.register( module, this );
 
@@ -77,26 +77,36 @@ Guido.BaseView.prototype = (function ($, _) {
     /**
      * The current state of the view.
      */
-    state: 'INDEX',
+    state: 'index',
 
     /**
      * Top nav actions corresponding to view state.
      */
+    // ACTIONS: {
+    //   INDEX: [],
+    //   SHOW: [],
+    //   NEW: [],
+    //   EDIT: [],
+    //   CONFIRM_DESTROY: [],
+    //   DESTROY: []
+    // },
+
     ACTIONS: {
-      INDEX: [],
-      SHOW: [],
-      NEW: [],
-      EDIT: [],
-      CONFIRM_DESTROY: [],
-      DESTROY: []
+      index: [],
+      show: [],
+      new: [],
+      edit: [],
+      confirm_destroy: [],
+      destroy: []
     },
+
 
     /**
      * The current object of the view
      */
-    object: null,
+    object: {},
 
-    formObject: null,
+    formObject: {},
 
     $form: null,
 
@@ -151,7 +161,7 @@ Guido.BaseView.prototype = (function ($, _) {
 
     init: function() {
 
-      if(Guido[this.name].withCart) {
+      if(Gui.do[this.name].withCart) {
         this.mixinModule('CartView');
         this.cart = new Guido.Cart();
       }
@@ -184,12 +194,25 @@ Guido.BaseView.prototype = (function ($, _) {
       }
     },
 
+    // mixinActions: function() {
+
+    //   _.reduce( Guido.Base.Actions, function( self, val, key ) {
+    //     if( !_.includes( self.reserved, key ) ) {
+    //       self[ key ] = _b( self, function() {
+    //         return self.r( val, arguments );
+    //       });
+    //     }
+    //     return self;
+    //   }, this ); // last argument of _.reduce is not context but initial value!!!
+    // },
+
     mixinActions: function() {
 
       _.reduce( Guido.Base.Actions, function( self, val, key ) {
         if( !_.includes( self.reserved, key ) ) {
           self[ key ] = _b( self, function() {
-            return self.r( val, arguments );
+            return self.r( self._call, key );
+            // return self.r( val, arguments );
           });
         }
         return self;
@@ -200,6 +223,7 @@ Guido.BaseView.prototype = (function ($, _) {
 
       // we want arguments without the action parameter
       args = _.drop( arguments )[0];
+      if( _.isString( args ) ) { args = [ args ]; }
       // args = _.compact( args );
       args = ( args && args.length && args.length > 0 ) ? args : undefined;
 
@@ -209,6 +233,12 @@ Guido.BaseView.prototype = (function ($, _) {
       } else {
         return this.deferredActions.then( _b( this, f, args ) );
       }
+    },
+
+    _call: function( func ) {
+      args = _.drop( arguments )[0];
+      // name = arguments[0].pop();
+      return this[ func ].apply( this, args );
     },
 
     moduleError: function() {
@@ -224,12 +254,17 @@ Guido.BaseView.prototype = (function ($, _) {
     mixinModule: function( module ) {
 
       // extend actions with module actions
-      this.ACTIONS = _.extend({}, this.ACTIONS, Guido[module]['ACTIONS']);
+      this.ACTIONS = _.extend({}, this.ACTIONS, Gui.do[module]['ACTIONS']);
 
-      _.reduce(_.omit(Guido[module], 'ACTIONS', 'resolve'), function(self, val, key) {
+      _.reduce(_.omit(Gui.do[module], 'ACTIONS', 'resolve'), function(self, val, key) {
         // keep overwritten functions with a leading dash.
         if(_.isFunction(self[key])) {
-          self['_' + key] = self[key];
+          if( Guido.Base.Actions[ key ] ) {
+            self[ '_' + key ] = Guido.Base.Actions[ key ]
+          }
+          else {
+            self['_' + key] = self[key];
+          }
         }
         self[key] = val;
         return self;
@@ -249,7 +284,31 @@ Guido.BaseView.prototype = (function ($, _) {
       }
 
       return this.resolved;
-    }
+    },
+
+    load: function( action ) {
+      var func, state, historyState;
+
+      if( action )
+      {
+        state = action;
+      }
+      else if( !_.isEmpty( history.state ) )
+      {
+        state = history.state.state;
+        this.applyHistoryState( history.state );
+      }
+      else
+      {
+        var route = Guido.routes.resolve();
+        state = route[ 1 ] || Guido.View.STATE.INDEX;
+        this.object = _.extend( {}, this.defaultObject, route[ 2 ] );
+      }
+
+      if( func = this.moduleFunc( state ) ) {
+        this.withoutHistory( func );
+      }
+    },
   };
 
   module.reserveBaseActions();
