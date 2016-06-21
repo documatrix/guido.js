@@ -24,7 +24,7 @@ Guido.Base.Render = {
     // do nothing...
   },
 
-  renderComponent: function( config, options, replace ) {
+  renderComponent: function( config, options, mode ) {
     if( !config.render ) {
       return;
     }
@@ -33,14 +33,16 @@ Guido.Base.Render = {
     component = this.stateComponent( config, context );
     // component = Guido.View.$template( config.tpl, context );
 
-    replace = _.isUndefined( replace ) ? config.replace : replace;
+    mode = _.isUndefined( mode ) ? config.mode : mode;
 
-    return this.dom( config.target, component, replace );
+    return this.dom( config.target, component, mode );
   },
 
-  dom: function( target, html, replace ) {
-    if( replace ) {
+  dom: function( target, html, mode ) {
+    if( mode === 'replace' ) {
       $( target ).replaceWith( html );
+    } else if( mode === 'append' ) {
+      $( target ).append( html );
     } else {
       $( target ).html( html );
     }

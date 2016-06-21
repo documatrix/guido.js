@@ -105,10 +105,16 @@ Guido.Base.Actions = {
   confirmDestroy: function(id) {
     this.changeState(Guido.View.STATE.CONFIRM_DESTROY, false);
 
-    this.openModal('confirm_destroy', _.extend( this.getRecord( id ), {
+    this.openModal('', _.extend( this.getRecord( id ), {
       id: id,
       action: "@destroy"
     }) );
+  },
+
+  confirmDestroy: function( id, options ) {
+    this.changeState(Guido.View.STATE.CONFIRM_DESTROY, false);
+    options.id = id;
+    this.openModal( undefined, options );
   },
 
   destroy: function(ids) {
@@ -168,7 +174,7 @@ Guido.Base.Actions = {
     }
 
     if( !this.modal ) {
-      this.openModal( _.snakeCase( this.name ) + '_preview', options );
+      this.openModal( 'preview', options );
     } else {
       this.$form = $(event.currentTarget).closest('form');
       options = this.serializeForm();
@@ -179,59 +185,32 @@ Guido.Base.Actions = {
     this.prepareModal( url );
   },
 
-  prepareModal: function( url ) {
-    var iFrameWidth = $(window).outerWidth() * 0.9;
-    var iFrameHeight = $(window).outerHeight() * 0.8;
-    //
-    var $modalBody = this.modal.find('.modal-body');
-    var $paddingSides = parseInt($modalBody.css('padding-left')) + parseInt($modalBody.css('padding-right'));
+  openModal: function( modal, options ) {
+    var domId = '#' + ( options.domId || 'dialog' );
 
-    //
-    this.modal
-    .find('iframe')
-    // to hide the old preview iframe
-    .attr('src', "")
-    .attr('src', url)
-    .attr('width', iFrameWidth)
-    .attr('height', iFrameHeight);
+    var config = _.extend( {}, Guido.config.components.dialog );
+    config.render = true;
+    config.tpl = modal ? modal : config.tpl;
 
 
-    this.modal.find('.modal-dialog').css({
-      width: iFrameWidth + $paddingSides
-    });
+    var opts = _.extend( {}, this.modalOptions( options ), options );
 
-    /** IE needs this */
-    this.modal.modal('show');
-  },
+    this.closeModal();
+    this.renderComponent( config, options );
+    this.modal = document.querySelector( domId );
 
-  openModal: function(modal, options) {
-    if(this.modal) {
-      this.modal.remove();
+    if (! this.modal.showModal ) {
+      dialogPolyfill.registerDialog( this.modal );
     }
-
-    if(!modal.match(/^modal[_-]/)) {
-      modal = 'modal_' + modal;
-    }
-
-    this.modal = Guido.View.$template(modal, this.modalOptions(options));
-    this.modal.appendTo('body');
-    this.modal.modal('toggle');
+    this.modal.showModal();
   },
 
   closeModal: function() {
-    if( !this.modal ) { return; }
-
-    var self = this;
-
-    this.modal.modal('hide');
-    this.modal.on( 'hidden.bs.modal', function() {
-      self.modal.remove.bind(this);
-      self.modal.remove();
-      self.modal = null;
-    });
-    /*this.modal.on( 'hidden.bs.modal', function( e ) {
-      $( e.currentTarget ).remove( );
-    } );*/
+    if( this.modal ) {
+      this.modal.close();
+      this.modal.parentNode.removeChild( this.modal );
+      this.modal = undefined;
+    }
   },
 
   modalOptions: function(optional) {
@@ -240,7 +219,6 @@ Guido.Base.Actions = {
       message: Guido.t(this.stateMessage(), optional )
     }, optional);
   },
-
 
   setupDateInputs: function( record ) {
     $('input[data-type="date"]').each( function( idx, input ) {

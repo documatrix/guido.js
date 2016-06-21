@@ -25,6 +25,12 @@ Guido.config = {
       render: true,
       target: '#toolbar',
       tpl: 'toolbar'
+    },
+    dialog: {
+      render: false,
+      target: 'body',
+      tpl: 'dialog',
+      mode: 'append'
     }
   },
 };
