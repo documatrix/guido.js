@@ -144,9 +144,8 @@ Guido.Router.prototype  = (function ($, _) {
 
       // the first option may be the module action to call.
       action = options[ 0 ];
-      if( _.isFunction( module[ action ] ) ) {
-        params._action_ = action;
-        options.pop();
+      if( this.hasAction( module, action ) ) {
+        params._action_ = options.shift();
       }
 
       // while( ( option = options.pop() ) != null ) {
@@ -159,6 +158,10 @@ Guido.Router.prototype  = (function ($, _) {
 
 
       return params;
+    },
+
+    hasAction: function( module, action ) {
+      return _.isFunction( module[ action ] ) || _.isFunction( Guido.Base.Actions[ action ] );
     },
 
     extractQueryParams: function ( url, params ) {

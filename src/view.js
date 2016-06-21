@@ -125,9 +125,8 @@ Guido.View = (function ($, _) {
      * </ul>
      */
     init: function() {
-      // use this when templates are in html not in js variable
-      //var $templates = $('script[type="text/x-handlebars-template"]');
-      //Guido.View.compile($templates);
+      // handlebars (mustache) interpolation for _.template
+      _.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
 
       Guido.View.initHandlebarsHelper();
 
@@ -139,15 +138,6 @@ Guido.View = (function ($, _) {
 
       // compile all templates that are present in the (index.)html file
       Guido.View.compile($('script[type="text/x-handlebars-template"]'));
-
-      // append the base template to the body
-      // Guido.View.$template('baseTemplate', Guido).appendTo('body');
-      // Guido.View.$template('navigation', Guido).replaceAll('#navigation');
-
-      // append the template content to the content section
-//      var module = Guido.View.getModuleFromURL();
-//      Guido.View.instance(module);
-      //$("#pjax").append(Guido.templateContent);
     },
 
     /**

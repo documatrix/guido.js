@@ -46,6 +46,31 @@ Guido.Base.Render = {
     }
   },
 
+  /**
+   * Render the template for the current state.
+   * When the module's state template cannot be found, fallback to the
+   * default state template.
+   * @param {object} options template options
+   * @returns {String} The state template as a String
+   */
+  stateTemplate: function(options) {
+    var name = this.stateTemplateName();
+
+    if(_.isFunction(Guido.View.templates[name])) {
+      return Guido.View.template(this.stateTemplateName(), options);
+    }
+
+    return Guido.View.template(this.defaultStateTemplateName(), options);
+  },
+
+  stateComponent: function( config, options ) {
+    return (
+      Guido.View.template( this.stateComponentName( config.tpl ), options ) ||
+      Guido.View.template( this.defaultStateComponentName( config.tpl ), options ) ||
+      Guido.View.template( this.defaultComponentName( config.tpl ), options )
+    );
+  },
+
   renderActions: function( actions ) {
     var rendered = "";
 

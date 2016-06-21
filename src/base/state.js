@@ -89,31 +89,6 @@ Guido.Base.State = {
   },
 
   /**
-   * Render the template for the current state.
-   * When the module's state template cannot be found, fallback to the
-   * default state template.
-   * @param {object} options template options
-   * @returns {String} The state template as a String
-   */
-  stateTemplate: function(options) {
-    var name = this.stateTemplateName();
-
-    if(_.isFunction(Guido.View.templates[name])) {
-      return Guido.View.template(this.stateTemplateName(), options);
-    }
-
-    return Guido.View.template(this.defaultStateTemplateName(), options);
-  },
-
-  stateComponent: function( options ) {
-    return (
-      Guido.View.template( this.stateComponentName( options.tpl ), options ) ||
-      Guido.View.template( this.defaultStateComponentName( options.tpl ), options ) ||
-      Guido.View.template( this.defaultComponentName( options.tpl ), options )
-    );
-  },
-
-  /**
    * Return the default view template name.
    */
   defaultStateTemplateName: function() {
@@ -170,8 +145,13 @@ Guido.Base.State = {
    * Generate request parameter func.
    * @returns {string} the value for request parameter func
    */
-  stateFunc: function() {
-    var func = _.snakeCase(this.name) + '_' + this.state;
+  stateFunc: function( state ) {
+    var action = state || this.state;
+    if( _.isObject( this.routes ) ) {
+      action = this.routes[ action ];
+    }
+
+    var func = _.snakeCase(this.name) + '/' + action;
     return func.toLowerCase();
   },
 
@@ -203,5 +183,5 @@ Guido.Base.State = {
 
   tplFile: function() {
     return 'tpl/' + _.snakeCase(this.name) + '.html';
-  }
+  },
 };

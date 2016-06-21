@@ -16,20 +16,15 @@ var Guido = Guido || {};
 
 Guido.Request = (function ($, _) {
 
-  var BASE_PATH = Guido.BASE_PATH || '/',
-      MODULE_PATH = Guido.MODULE_PATH || '/js/modules',
-      TEMPLATE_PATH = Guido.TEMPLATE_PATH || '/tpl',
+  var BASE_PATH = Guido.config.requestPath || '/',
+      MODULE_PATH = Guido.config.modulePath || '/js/modules',
+      TEMPLATE_PATH = Guido.config.templatePath || '/tpl',
       HOME = null;
 
   // TODO: unifiy session passing to server -> top level or in data {}
   var defaults = {
-    url: BASE_PATH,
-    dataType: 'text',
-    contentType: 'application/json',
     type: 'POST',
-    data: {
-      session_id: null
-    }
+    data: {}
   };
 
   var defaultData = {
@@ -123,7 +118,11 @@ Guido.Request = (function ($, _) {
      * @returns {jQuery promise} the jQuery XHR promise.
      */
     save: function(func, data, callback, errorCallback) {
-      return this.ajax(this.buildPostParams(func, data), callback, errorCallback);
+      options = {
+        url: func,
+        data: data
+      };
+      return this.ajax(options, callback, errorCallback);
     },
 
     /**
@@ -280,7 +279,8 @@ Guido.Request = (function ($, _) {
     buildParams: function(func, data) {
       var out = _.extend({}, defaults);
       out.url = BASE_PATH + func;
-      out.data = JSON.stringify(Guido.Request.buildData(data));
+      _.extend( out.data, data );
+      // out.data = JSON.stringify(Guido.Request.buildData(data));
       return out;
     },
 

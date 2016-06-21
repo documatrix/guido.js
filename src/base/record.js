@@ -46,9 +46,8 @@ Guido.Base.Record = {
   },
 
   setRecord: function( callback, json, status, xhr ) {
-    if( _.isObject( json ) && _.isObject( json.record ) ) {
-      this.object = json.record;
-      this.object.selectOptions = json.selectOptions;
+    if( _.isObject( json ) ) {
+      this.object = json;
     }
     if( _.isArray( callback ) ) {
       callback = callback[ 0 ];
@@ -59,23 +58,32 @@ Guido.Base.Record = {
   },
 
   getRecordRemote: function( id, callback ) {
-    var options = {}, url;
+    var options = { }, url;
 
-    id = id || Guido.Request.getURLParameter( this.idCol ).name;
+    id = id || Guido.Request.getURLParameter( this.idCol );
 
     if( !id ) {
       return this.malformedUrlFallback( Guido.t( 'CAP_ERR_MALFORMED_URL', { url: window.location.href } ) );
     }
 
     options[ this.idCol ] = id;
-
-    url = _.snakeCase(this.name) + '_get';
+    // explicitly pass state as in show action state is not set to show yet.
+    url = this.stateFunc( Guido.View.STATE.SHOW );
 
     return Guido.Request.load( url,
       options,
       _b( this, this.setRecord, callback ),
       _b( this, this.getRecordErrorCallback, id )
     );
+
+    // options.data[ this.idCol ] = id;
+    // options.url = this.stateFunc();
+
+    // return Guido.Request.ajax(
+    //   options,
+    //   _b( this, this.setRecord, callback ),
+    //   _b( this, this.getRecordErrorCallback, id )
+    // );
   },
 
   getRecordErrorCallback: function( id ) {
@@ -91,7 +99,7 @@ Guido.Base.Record = {
 
   getRecordFrom: function( collection, id ) {
     var query = {};
-    query[ this.getIdCol() ] = (id || '').toString();
+    query[ this.getIdCol() ] = (id || ''); //.toString();
     return _.find( collection, query );
   },
 
@@ -164,7 +172,7 @@ Guido.Base.Record = {
 
   getIdCol: function() {
     //return this.idCol || this.setIdFromTableOptions();
-    return _.findKey(this.stateTableFields(), { 'key': true });
+    return _.findKey(this.stateTableFields(), { 'key': true }) || this.idCol;
   },
 
   getId: function( object ) {

@@ -1,5 +1,12 @@
 var Guido = Guido || {};
 
+function nav( code ) {
+  var layout = document.querySelector( '.mdl-layout');
+  eval( code );
+  layout.MaterialLayout.toggleDrawer();
+  return false;
+}
+
 Guido.Event = (function ($, _) {
 
   var module = {},
