@@ -76,8 +76,10 @@ Guido.Router.prototype  = (function ($, _) {
 
       url += _.snakeCase( module.name );
 
+      params = module.toParams();
+
       for( var i = 0; i < module.params.length; i++ ) {
-        v = module.object[ module.params[ i ] ];
+        v = params[ module.params[ i ] ];
         if( v ) {
           options.push( v );
         }
@@ -87,7 +89,7 @@ Guido.Router.prototype  = (function ($, _) {
         url += '/' + options.join( '/' );
       }
 
-      url += '/' + ( module.state || '' );
+      url += '/' + ( params.state || '' );
 
       return url;
     },
