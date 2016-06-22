@@ -211,7 +211,11 @@ Guido.BaseView.prototype = (function ($, _) {
       _.reduce( Guido.Base.Actions, function( self, val, key ) {
         if( !_.includes( self.reserved, key ) ) {
           self[ key ] = _b( self, function() {
-            return self.r( self._call, key );
+            if ( arguments.length > 0 ) {
+              return self.r( self._call, key, arguments );
+            } else {
+              return self.r( self._call, key );
+            }
             // return self.r( val, arguments );
           });
         }
@@ -222,7 +226,7 @@ Guido.BaseView.prototype = (function ($, _) {
     r: function( f ) {
 
       // we want arguments without the action parameter
-      args = _.drop( arguments )[0];
+      args = _.drop( arguments, 1 );//[0];
       if( _.isString( args ) ) { args = [ args ]; }
       // args = _.compact( args );
       args = ( args && args.length && args.length > 0 ) ? args : undefined;
@@ -235,8 +239,16 @@ Guido.BaseView.prototype = (function ($, _) {
       }
     },
 
-    _call: function( func ) {
-      args = _.drop( arguments )[0];
+    _call: function( options ) {
+      if( _.isArray(options) ) {
+        options = options[0];
+        func = options.shift();
+        args = _.flatten( options );
+      } else {
+        func = options;
+        args = undefined;
+      }
+      // args = _.drop( arguments )[0];
       // name = arguments[0].pop();
       return this[ func ].apply( this, args );
     },

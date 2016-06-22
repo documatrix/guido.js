@@ -186,7 +186,8 @@ Guido.Base.Actions = {
   },
 
   openModal: function( modal, options ) {
-    var domId = '#' + ( options.domId || 'dialog' );
+    options = options || {};
+    options.domId = options.domId || 'dialog';
 
     var config = _.extend( {}, Guido.config.components.dialog );
     config.render = true;
@@ -197,7 +198,7 @@ Guido.Base.Actions = {
 
     this.closeModal();
     this.renderComponent( config, options );
-    this.modal = document.querySelector( domId );
+    this.modal = document.querySelector( "#" + options.domId );
 
     if (! this.modal.showModal ) {
       dialogPolyfill.registerDialog( this.modal );

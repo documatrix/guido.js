@@ -211,14 +211,13 @@ Guido.Request = (function ($, _) {
         }
 
         if( _.isFunction( errorCallback ) ) {
-          errorCallback( json, message, response );
+          return errorCallback( json, message, response );
         } else {
-          var err = Guido.Request[ response.status ]
+          var err = Guido.Request[ response.status ];
           if( _.isFunction( err ) ) {
-            err( response, error, message );
+            return err( response, error, message );
           }
         }
-
         Guido.Notification.error(message);
       });
     },
@@ -231,8 +230,15 @@ Guido.Request = (function ($, _) {
       _.extend( options.data, Guido.Session.user() );
     },
 
-    401: function( response, error, message ) {
+    400: function( response, error, message ) {
       Guido.View.instance( 'auth' ).show();
+    },
+
+    401: function( response, error, message ) {
+      this[ '400' ]( response, error, message );
+    },
+    403: function( response, error, message ) {
+      this[ '400' ]( response, error, message );
     },
 
     done: function(data, status, response, callback, errorCallback) {
@@ -252,7 +258,7 @@ Guido.Request = (function ($, _) {
         json = { success: true };
       }
 
-      if( status === 'success' ) {
+      if( status === 'success' && ( !_.isObject( json ) || json.success != false ) ) {
         if ( _.isObject( json.notifications ) ) {
           Guido.Notification.renderAll(json.notifications);
         }
@@ -261,7 +267,7 @@ Guido.Request = (function ($, _) {
           return callback(json, status, response);
         }
       } else {
-        Guido.Notification.renderAll(json.notifications);
+        Guido.Notification.error(json.msg);
         if ( _.isFunction( errorCallback ) )
         {
           errorCallback( json, status, response );

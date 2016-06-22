@@ -3,7 +3,9 @@ var Guido = Guido || {};
 function nav( code ) {
   var layout = document.querySelector( '.mdl-layout');
   eval( code );
-  layout.MaterialLayout.toggleDrawer();
+  if( layout.MaterialLayout.drawer_.getAttribute('aria-hidden') === 'false' ) {
+    layout.MaterialLayout.toggleDrawer();
+  }
   return false;
 }
 
@@ -108,7 +110,7 @@ Guido.Event = (function ($, _) {
 
   events = {
     click: function() {
-      $(document).on('click', 'button, a, tr', function(event) {
+      $(document).on('click', 'button, a, tr, li.mdl-list__item', function(event) {
         var $el    = $(event.currentTarget),
             action = $el.data('action');
 
