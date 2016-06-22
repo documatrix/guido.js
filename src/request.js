@@ -230,15 +230,15 @@ Guido.Request = (function ($, _) {
       _.extend( options.data, Guido.Session.user() );
     },
 
-    400: function( response, error, message ) {
+    '400': function( response, error, message ) {
       Guido.View.instance( 'auth' ).show();
     },
 
-    401: function( response, error, message ) {
-      this[ '400' ]( response, error, message );
+    '401': function( response, error, message ) {
+      Guido.Request[ '400' ]( response, error, message );
     },
-    403: function( response, error, message ) {
-      this[ '400' ]( response, error, message );
+    '403': function( response, error, message ) {
+      Guido.Request[ '400' ]( response, error, message );
     },
 
     done: function(data, status, response, callback, errorCallback) {
