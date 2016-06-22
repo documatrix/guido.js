@@ -110,10 +110,11 @@ Guido.Event = (function ($, _) {
 
   events = {
     click: function() {
-      $(document).on('click', 'button, a, tr, li.mdl-list__item', function(event) {
+      $(document).on('click', 'button, a', function(event) {
         var $el    = $(event.currentTarget),
             action = $el.data('action');
 
+        event.preventDefault();
         if(action) {
           Guido.Event.delegate(event, action);
           // return false does preventDefault + stopPropagation
