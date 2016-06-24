@@ -31,6 +31,12 @@ Guido.config = {
       target: 'body',
       tpl: 'dialog',
       mode: 'append'
+    },
+    footer: {
+      render: false,
+      target: 'footer.doc-switcher',
+      tpl: 'footer',
+      mode: 'replace'
     }
   },
 };
