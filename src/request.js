@@ -267,9 +267,11 @@ Guido.Request = (function ($, _) {
           return callback(json, status, response);
         }
       } else {
-        Guido.Notification.error(json.msg);
-        if ( _.isFunction( errorCallback ) )
-        {
+        if( json.msg ) {
+          Guido.Notification.error(json.msg);
+        }
+
+        if ( _.isFunction( errorCallback ) ) {
           errorCallback( json, status, response );
         }
       }
