@@ -1,0 +1,26 @@
+{
+  "name": "guido.js",
+  "version": "0.0.0",
+  "description": "GUI Framework",
+  "main": "src/index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": ""
+  },
+  "repository": {
+    type: "git",
+    "url": "https://github.com/documatrix/guido.js.git"
+  },
+  "keywords": [
+    "gui",
+    "state"
+  ],
+  "author": "Christoph Ambichl <christoph.ambichl@documatrix.com>",
+  "license": "MIT"
+  "bugs": {
+    "url": "https://github.com/documatrix/guido.js/issues"
+  },
+  "homepage": "https://github.com/documatrix/guido.js"
+}
