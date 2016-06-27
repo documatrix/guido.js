@@ -16,6 +16,11 @@ Guido.config = {
       target: "#header",
       tpl: "header"
     },
+    navigation: {
+      render: true,
+      target: '#navigation',
+      tpl: 'navigation'
+    },
     notifications: {
       render: true,
       target: '#notifications',

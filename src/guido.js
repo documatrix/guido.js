@@ -95,10 +95,10 @@ var app = (function ($) {
       if( _.isFunction( callback ) ) {
         callback();
 
-        setTimeout(function() {
-          $(document).trigger('guidoloaded');
-          $(document).off('guidoloaded');
-        }, 1);
+        // setTimeout(function() {
+        //   $(document).trigger('guidoloaded');
+        //   $(document).off('guidoloaded');
+        // }, 1);
       }
     },
 

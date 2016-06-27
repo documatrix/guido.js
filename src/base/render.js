@@ -11,10 +11,15 @@ if( typeof Guido.Base === 'undefined' ) {
 Guido.Base.Render = {
 
   render: function( options ) {
+    Guido.Event.fire( 'guido:beforeRender', this );
+
     this.dom( Guido.config.content.target, this.stateTemplate( options || {} ) );
 
     for( var component in Guido.config.components ) {
-      this.renderComponent( Guido.config.components[ component ], options );
+      // var component =  ;
+      // if( !!component ) {
+        this.renderComponent( Guido.config.components[ component ] , options );
+      // }
     }
 
     Guido.Event.fire( 'guido:rendered', this );
@@ -25,7 +30,7 @@ Guido.Base.Render = {
   },
 
   renderComponent: function( config, options, mode ) {
-    if( !config.render ) {
+    if( !config.render || _.isFunction(config.render) && !config.render.call(this) ) {
       return;
     }
 
@@ -68,6 +73,7 @@ Guido.Base.Render = {
   stateComponent: function( config, options ) {
     return (
       Guido.View.template( this.stateComponentName( config.tpl ), options ) ||
+      Guido.View.template( this.defaultViewComponentName( config.tpl ), options ) ||
       Guido.View.template( this.defaultStateComponentName( config.tpl ), options ) ||
       Guido.View.template( this.defaultComponentName( config.tpl ), options )
     );

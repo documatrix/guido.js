@@ -98,15 +98,15 @@ Guido.Base.State = {
   },
 
   defaultStateComponentName: function( component ) {
-    return this.defaultStateTemplateName() + '_' + component;
+    return 'cmp-' + this.defaultStateTemplateName() + '_' + component;
   },
 
   defaultComponentName: function( component ) {
-    return ( Guido.config.defaults.fallback + '_' + component ).toLowerCase();
+    return 'cmp-' + ( Guido.config.defaults.fallback + '_' + component ).toLowerCase();
   },
 
   stateComponentName: function( component ) {
-    return this.stateTemplateName() + '_' + component;
+    return 'cmp-' + this.stateTemplateName() + '_' + component;
   },
 
   formTemplateName: function() {
@@ -116,6 +116,10 @@ Guido.Base.State = {
   stateTitleName: function() {
     var title = 'CAP_TITLE_' + this.name + '_' + this.state;
     return title.toUpperCase();
+  },
+
+  defaultViewComponentName: function( component ) {
+    return 'cmp-' + _.snakeCase(this.name) + '_' + component;
   },
 
   stateMessage: function() {
