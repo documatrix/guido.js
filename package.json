@@ -2,15 +2,21 @@
   "name": "guido.js",
   "version": "0.0.0",
   "description": "GUI Framework",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "directories": {
     "example": "examples"
   },
   "scripts": {
-    "test": ""
+    "commit" : "git-cz",
+    "check-coverage": "nyc check-coverage --statements 100 --branches 100 --function 100",
+    "watch:test": "npm t -- -w",
+    "test": "mocha test/index.test.js --compilers js:babel-register",
+    "cover": "nyc npm t",
+    "prebuild": "rimraf dist",
+    "build": "babel --copy-files --out-dir dist src"
   },
   "repository": {
-    type: "git",
+    "type": "git",
     "url": "https://github.com/documatrix/guido.js.git"
   },
   "keywords": [
@@ -18,9 +24,40 @@
     "state"
   ],
   "author": "Christoph Ambichl <christoph.ambichl@documatrix.com>",
-  "license": "MIT"
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/documatrix/guido.js/issues"
   },
-  "homepage": "https://github.com/documatrix/guido.js"
+  "homepage": "https://github.com/documatrix/guido.js",
+  "devDependencies": {
+    "babel-cli": "6.10.1",
+    "babel-preset-es2015": "6.9.0",
+    "babel-preset-stage-2": "6.11.0",
+    "babel-register": "6.9.0",
+    "chai": "3.5.0",
+    "commitizen": "2.8.2",
+    "cz-conventional-changelog": "1.1.6",
+    "ghooks": "1.2.4",
+    "mocha": "2.5.3",
+    "nyc": "6.6.1",
+    "rimraf": "2.5.2"
+  },
+  "babel": {
+    "presets": [
+      "es2015",
+      "stage-2"
+    ]
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "config": {
+    "ghooks": {
+      "pre-commit": "npm run cover"
+    }
+  },
+  "czConfig": {
+    "path": "node_modules/cz-conventional-changelog"
+  }
 }
