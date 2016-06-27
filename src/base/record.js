@@ -159,7 +159,6 @@ Guido.Base.Record = {
       object: this.object,
       formObject: this.formObject,
       records: this.records,
-      cart: this.cart ? this.cart.items : {},
       selectOptions: this.selectOptions,
       filterOptions: this.filterOptions
       // table options commented, as sometimes a jQuery object is returned

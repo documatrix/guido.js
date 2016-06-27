@@ -27,11 +27,6 @@ Guido.Base.State = {
   applyHistoryState: function(state) {
     if(this.name !== state.name) { return; }
 
-    if(this.withCart && !_.isEmpty( state.cart )) {
-      this.cart.items = state.cart;
-    }
-    delete state['cart'];
-
     _.extend(this, state);
 
     /* istanbul ignore else  */

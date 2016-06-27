@@ -161,11 +161,6 @@ Guido.BaseView.prototype = (function ($, _) {
 
     init: function() {
 
-      if(Gui.do[this.name].withCart) {
-        this.mixinModule('CartView');
-        this.cart = new Guido.Cart();
-      }
-
       this.mixinModule( this.name );
 
       this.setIdFromTableOptions();

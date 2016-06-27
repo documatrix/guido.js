@@ -21,7 +21,6 @@ Guido.View = (function ($, _) {
       UPDATE: 'update',
       CONFIRM_DESTROY: 'confirm_destroy',
       DESTROY: 'destroy',
-      SHOW_CART: 'show_cart'
     },
 
     ICON: {
@@ -248,10 +247,8 @@ Guido.View = (function ($, _) {
      *
      * @param {object} view the view module
      * @param {object} interpolation dynamic values for the title
-     * @param {boolean} withCart specifies if the cart should be rendered or not
      */
-//    renderTopNav: function(view, interpolation, withCart) {
-//
+//    renderTopNav: function(view, interpolation) {
 //      var title = 'CAP_TITLE_' + view.name.toUpperCase() + '_' + view.state.toUpperCase();
 //
 //      //var actions = Guido.View.ACTIONS[view.state];
@@ -263,7 +260,6 @@ Guido.View = (function ($, _) {
 //      var data = {
 //        title: Guido.t(title, interpolation),
 //        actions: actions,
-//        withCart: withCart
 //      };
 //
 //      Guido.View.$template('top_nav', data).replaceAll('#top-nav');
