@@ -321,6 +321,8 @@ Guido.BaseView.prototype = (function ($, _) {
 
       if( func = this.moduleFunc( state ) ) {
         this.withoutHistory( func );
+      } else {
+        this.deferredActions.then( _b( this, this._call, [ state ] ) );
       }
     },
   };
