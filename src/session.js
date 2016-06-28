@@ -43,12 +43,12 @@ Guido.Session = (function ($, _) {
         throw new Error( "no session object passed" );
       }
 
-      Guido.user = {
-        session_id: json.session_id,
-        user_id: json.user_id
-      };
-      this.store( Guido.user );
-      // this.ajaxSetup();
+      // Remove irrelevant information
+      delete json.success;
+      delete json.action;
+
+      this.appendTo( 'mandants', json.mandants || {} );
+      Guido.user = this.appendTo( 'user', json );
     },
 
     destroy: function() {
@@ -57,11 +57,35 @@ Guido.Session = (function ($, _) {
     },
 
     store: function( user ) {
-      if (typeof(Storage) === "undefined") {
+      this.setItem( 'user', JSON.stringify( user ) );
+    },
+
+    setItem: function( key, val ) {
+      if ( (typeof Storage) === 'undefined' ) {
         return;
       }
 
-      localStorage.setItem( "user", JSON.stringify( user ) );
+      localStorage.setItem(key, val);
+    },
+
+    getItem: function( key ) {
+      if( (typeof Storage) === 'undefined' ) {
+        return;
+      }
+
+      return localStorage.getItem(key) || '{}';
+    },
+
+    appendTo: function( key, childObject ) {
+      var parentObject = JSON.parse( this.getItem( key ) );
+
+      if( ! _.isObject( parentObject ) ) {
+        throw new Error('Can\'t append to non-object session item');
+      }
+
+      this.setItem( key, JSON.stringify( _.extend( parentObject, childObject ) ) );
+
+      return parentObject;
     },
 
 
@@ -75,7 +99,7 @@ Guido.Session = (function ($, _) {
     // },
 
     userFromStore: function() {
-      Guido.user = JSON.parse( localStorage.user || "{}" );
+      Guido.user = JSON.parse( this.getItem('user') || "{}" );
       // this.ajaxSetup();
       return Guido.user;
     },
