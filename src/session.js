@@ -39,15 +39,7 @@ Guido.Session = (function ($, _) {
     },
 
     save: function( json ) {
-      if( !_.isObject( json ) || !json.session_id ) {
-        throw new Error( "no session object passed" );
-      }
-
-      // Remove irrelevant information
-      delete json.success;
-      delete json.action;
-
-      this.appendTo( 'mandants', json.mandants || {} );
+      Guido.Event.fire( 'Guido.Session.save', json );
       Guido.user = this.appendTo( 'user', json );
     },
 
