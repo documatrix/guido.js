@@ -198,6 +198,12 @@ Guido.Request = (function ($, _) {
 
       this.addSession( options );
 
+      if( !options.dataType ) {
+        // setting desired data type of a response to json since its
+        // most likely the type of data thats used in this context
+        options.dataType = 'json';
+      }
+
       // return the ajax function to provide promise functionality ($.when) for jQuery
       return $.ajax(options).done(function(data, status, response) {
         Guido.Request.done(data, status, response, callback, errorCallback);
