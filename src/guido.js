@@ -68,11 +68,11 @@ var app = (function ($) {
     start: function ( callback ) {
       this.bootstrap();
 
-      if( _.isFunction( callback ) ) {
-        callback.call( this, Guido );
-      }
-
       Guido.View.instanceFromUrl().load();
+
+      if( _.isFunction( callback ) ) {
+        callback( this );
+      }
     },
 
     /**
