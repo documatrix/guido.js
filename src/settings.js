@@ -15,8 +15,8 @@ if( typeof Guido === 'undefined' ) { Guido = {} }
     },
     components: {
     },
-    basePath: rootPath + '/',
-    modulePath: rootPath + '/modules',
+    basePath: rootPath_ + '/',
+    modulePath: rootPath_ + '/modules',
     tempaltePath: rootPath_ + '/templates',
     requestPath: rootPath_ + '/'
   };
