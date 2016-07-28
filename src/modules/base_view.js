@@ -9,7 +9,7 @@ Guido.BaseView = function( module ) {
 
   this.promise = arguments[1];
 
-  if( !this.promise && _.isUndefined(Gui.do[module])) {
+  if( !this.promise && _.isUndefined(Guido[module])) {
     throw new Error("Module not present");
   }
 
@@ -261,7 +261,7 @@ Guido.BaseView.prototype = (function ($, _) {
     mixinModule: function( module ) {
 
       // extend actions with module actions
-      this.ACTIONS = _.extend({}, this.ACTIONS, Gui.do[module]['ACTIONS']);
+      this.ACTIONS = _.extend({}, this.ACTIONS, Guido[module]['ACTIONS']);
 
       // when the module is resolved, reset the base actions not to be called
       // with r() wrapper.
@@ -270,7 +270,7 @@ Guido.BaseView.prototype = (function ($, _) {
         return self;
       }, this);
 
-      _.reduce(_.omit(Gui.do[module], 'ACTIONS', 'resolve'), function(self, val, key) {
+      _.reduce(_.omit(Guido[module], 'ACTIONS', 'resolve'), function(self, val, key) {
         // keep overwritten functions with a leading dash.
         if(_.isFunction(self[key])) {
           if( Guido.Base.Actions[ key ] ) {

@@ -1,5 +1,5 @@
 var Guido = Guido || {};
-var Gui = { do: {} };
+var Gui = { do: Guido };
 
 /**
  * Bind a context to a function to use this inside the function with the correct scope.
