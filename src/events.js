@@ -1,14 +1,5 @@
 var Guido = Guido || {};
 
-function nav( code ) {
-  var layout = document.querySelector( '.mdl-layout');
-  eval( code );
-  if( layout.MaterialLayout.drawer_.getAttribute('aria-hidden') === 'false' ) {
-    layout.MaterialLayout.toggleDrawer();
-  }
-  return false;
-}
-
 Guido.Event = (function ($, _) {
 
   var module = {},
@@ -159,7 +150,8 @@ Guido.Event = (function ($, _) {
         }
 
         if( txt.length > 0 ) {
-          target.MaterialSnackbar.showSnackbar( { message: txt } );
+          //target.MaterialSnackbar.showSnackbar( { message: txt } );
+          // @TODO implement notifier
         }
       });
     },
@@ -216,4 +208,3 @@ Guido.Event = (function ($, _) {
 
 
 })(jQuery, _);
-
