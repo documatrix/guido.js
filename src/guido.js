@@ -68,7 +68,10 @@ var app = (function ($) {
     start: function ( callback ) {
       this.bootstrap();
 
-      Guido.View.instanceFromUrl().load();
+      Guido.View.instanceFromUrl().done(function( view ) {
+        Guido.View.currenView = view;
+        view.load();
+      });
 
       if( _.isFunction( callback ) ) {
         callback( this );

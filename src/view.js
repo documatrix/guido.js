@@ -81,9 +81,9 @@ Guido.View = (function ($, _) {
         }
       });
 
-      Guido.View.currentView = new Guido.BaseView( module, promise );
-
-      return Guido.View.currentView;
+      return promise.then(function() {
+        return new Guido.BaseView( module, promise );
+      });
     },
 
     instanceFromUrl: function() {
