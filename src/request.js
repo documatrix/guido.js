@@ -162,6 +162,7 @@ Guido.Request = (function ($, _) {
         url = Guido.config.templatePath + '/' + _.snakeCase(module) + '.html';
         tplXHR = this.ajax({
           url: url,
+          dataType: 'html',
           cache: Guido.isProduction()
         });
         tplXHR.then( function( data, status, xhr ) {
