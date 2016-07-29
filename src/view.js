@@ -77,7 +77,7 @@ Guido.View = (function ($, _) {
         if( Guido.lastState ) {
           Guido.View.currentView = Guido.View.get( Guido.lastState.name );
         } else {
-          Guido.View.currentView = Guido.View.instance( Guido.View.DEFAULT_MODULE )
+          Guido.View.instance( Guido.View.DEFAULT_MODULE )
             .done(function( view ) {
               Guido.View.currenView = view;
               view.load();
