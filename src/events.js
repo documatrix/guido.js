@@ -92,7 +92,7 @@ Guido.Event = (function ($, _) {
       }
     },
 
-    fire( name, options, target ) {
+    fire: function( name, options, target ) {
       var event;
 
       target = target || document;
